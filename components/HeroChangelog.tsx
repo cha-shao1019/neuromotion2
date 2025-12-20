@@ -39,24 +39,24 @@ const HeroChangelog: React.FC<HeroChangelogProps> = ({ language, scrollY }) => {
                 <div className="flex items-center gap-3 mb-12 px-6 py-3 rounded-full bg-white dark:bg-slate-800/50 border border-slate-300 dark:border-slate-700 shadow-md backdrop-blur-md">
                     <LogoIcon className="w-5 h-5 text-[#4caaa2]" />
                     <span className="text-xs font-black text-slate-600 dark:text-slate-300 tracking-[0.2em] uppercase">
-                        {language === 'zh-TW' ? 'v3.4.1 · 臨床級居家篩檢' : 'v3.4.1 · Clinical Home Screening'}
+                        {language === 'zh-TW' ? 'v3.4.5 · 臨床級居家篩檢' : 'v3.4.5 · Clinical Home Screening'}
                     </span>
                 </div>
 
                 {/* 主標題 - 修正顏色顯示問題，使用 Hex 色碼確保漸層可見 */}
                 <h1 className="flex flex-col md:flex-row items-center justify-center text-center select-none mb-16 gap-0 md:gap-4">
-                    <span className="text-6xl sm:text-7xl md:text-8xl lg:text-9xl font-[900] text-slate-900 dark:text-white tracking-tighter leading-none">
+                    <span className="text-5xl sm:text-7xl md:text-8xl lg:text-9xl font-[900] text-slate-900 dark:text-white tracking-tighter leading-none">
                         NEURO
                     </span>
-                    <span className="text-6xl sm:text-7xl md:text-8xl lg:text-9xl font-[900] text-transparent bg-clip-text bg-gradient-to-r from-[#4caaa2] to-[#3b82f6] tracking-tighter leading-none pb-2">
+                    <span className="text-5xl sm:text-7xl md:text-8xl lg:text-9xl font-[900] text-transparent bg-clip-text bg-gradient-to-r from-[#4caaa2] to-[#3b82f6] tracking-tighter leading-none pb-2">
                         MOTION
                     </span>
                 </h1>
 
                 {/* 捲動引導 - 懸浮按鈕 */}
                 <div className="flex flex-col items-center gap-4 animate-bounce">
-                    <div className="flex items-center gap-3 px-8 py-4 bg-slate-900 text-white rounded-full shadow-xl hover:shadow-2xl hover:scale-105 transition-all cursor-default group border border-slate-700">
-                        <span className="text-sm font-bold tracking-widest uppercase group-hover:text-[#4caaa2] transition-colors">
+                    <div className="flex items-center gap-3 px-6 py-3 sm:px-8 sm:py-4 bg-slate-900 text-white rounded-full shadow-xl hover:shadow-2xl hover:scale-105 transition-all cursor-default group border border-slate-700">
+                        <span className="text-xs sm:text-sm font-bold tracking-widest uppercase group-hover:text-[#4caaa2] transition-colors">
                             {language === 'zh-TW' ? '向下滑動了解詳情' : 'Scroll Down'}
                         </span>
                         <ArrowDownIcon className="w-4 h-4 text-[#4caaa2]" />

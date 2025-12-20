@@ -1,3 +1,4 @@
+
 import { ScreeningResults, AdminData, ChartDataPoint, PatientReportRequest } from '../types';
 
 const REPORTS_STORAGE_KEY = 'neuromotion_reports'; // For aggregate data
@@ -25,7 +26,6 @@ const determineMotorTestResult = (fingerTapResult: ScreeningResults['fingerTapRe
 /**
  * Saves the report to the main aggregate pool.
  */
-// FIX: Renamed 'saveToAggregateReports' to 'saveReport' and exported it to resolve an import error.
 export const saveReport = (results: ScreeningResults, realData?: { frequency: ChartDataPoint[], amplitude: ChartDataPoint[] }): void => {
      if (!results.userId) {
         console.error("Cannot save report without a userId.");
@@ -120,7 +120,6 @@ export const acceptReport = (reportId: string): void => {
         acceptedReport.status = 'accepted';
         
         // Save to aggregate pool upon acceptance
-        // FIX: Updated the function call to use the new name 'saveReport'.
         saveReport(acceptedReport.fullReportData, acceptedReport.realData);
 
         // Update the status in the pending list (or remove it)

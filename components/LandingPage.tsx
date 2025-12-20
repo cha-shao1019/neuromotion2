@@ -132,10 +132,10 @@ const LandingPage: React.FC<LandingPageProps> = ({ onStart, onLogoClick, onAdmin
                     </div>
 
                     <div id="features-section" className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-8 mb-20">
-                        <div className="bg-white dark:bg-slate-800/50 p-12 sm:p-16 rounded-[3rem] border border-slate-100 dark:border-slate-700 shadow-xl shadow-slate-200/50 dark:shadow-black/20 flex flex-col justify-center relative overflow-hidden">
+                        <div className="bg-white dark:bg-slate-800/50 p-8 sm:p-12 md:p-16 rounded-[3rem] border border-slate-100 dark:border-slate-700 shadow-xl shadow-slate-200/50 dark:shadow-black/20 flex flex-col justify-center relative overflow-hidden">
                             <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-bl from-[#4caaa2]/10 to-transparent rounded-bl-[10rem]"></div>
                             
-                            <h3 className="text-3xl sm:text-4xl font-black text-slate-900 dark:text-white mb-8 relative z-10">
+                            <h3 className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white mb-8 relative z-10">
                                 {t.landing.featureTitle[language]}
                                 <span className="text-[#4caaa2] block">{t.landing.featureTitleHighlight[language]}</span>
                             </h3>
@@ -160,7 +160,7 @@ const LandingPage: React.FC<LandingPageProps> = ({ onStart, onLogoClick, onAdmin
                         </div>
 
                         <div 
-                            className="bg-slate-100 dark:bg-slate-800/30 p-10 rounded-[3rem] border border-slate-200 dark:border-slate-700 shadow-inner flex items-center justify-center relative overflow-hidden group cursor-pointer"
+                            className="bg-slate-100 dark:bg-slate-800/30 p-6 sm:p-10 rounded-[3rem] border border-slate-200 dark:border-slate-700 shadow-inner flex items-center justify-center relative overflow-hidden group cursor-pointer"
                             onClick={() => { setIsCoreAnimating(true); setTimeout(() => setIsCoreAnimating(false), 1000); }}
                         >
                             <div className="absolute inset-0 figma-grid opacity-30"></div>
@@ -174,19 +174,19 @@ const LandingPage: React.FC<LandingPageProps> = ({ onStart, onLogoClick, onAdmin
                     </div>
 
                     <div className="max-w-4xl mx-auto mt-32 mb-20">
-                        <Card className="bg-slate-900 text-center !p-16 !rounded-[4rem] relative overflow-hidden">
+                        <Card className="bg-slate-900 text-center !p-8 sm:!p-16 !rounded-[4rem] relative overflow-hidden">
                              <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-b from-slate-800 to-slate-900 z-0"></div>
                              <div className="absolute -top-20 -right-20 w-80 h-80 bg-[#4caaa2]/20 blur-[100px] rounded-full z-0"></div>
 
                              <div className="relative z-10">
-                                <h2 className="text-4xl sm:text-5xl font-black text-white mb-6 tracking-tighter">
+                                <h2 className="text-3xl sm:text-4xl font-black text-white mb-6 tracking-tighter">
                                     {t.landing.ctaTitle[language]}
                                 </h2>
                                 <p className="text-slate-400 text-lg mb-12 max-w-xl mx-auto font-medium">
                                     {t.landing.subtitle[language]}
                                 </p>
                                 
-                                <Button onClick={onStart} className="w-full sm:w-auto px-16 py-8 text-2xl rounded-[2.5rem] bg-[#4caaa2] hover:bg-[#3d8b85] text-white shadow-[0_20px_50px_rgba(76,170,162,0.3)] hover:shadow-[0_30px_60px_rgba(76,170,162,0.5)] border-none transform hover:-translate-y-1 transition-all duration-300">
+                                <Button onClick={onStart} className="w-full sm:w-auto px-12 py-6 text-xl sm:px-16 sm:py-8 sm:text-2xl rounded-[2.5rem] bg-[#4caaa2] hover:bg-[#3d8b85] text-white shadow-[0_20px_50px_rgba(76,170,162,0.3)] hover:shadow-[0_30px_60px_rgba(76,170,162,0.5)] border-none transform hover:-translate-y-1 transition-all duration-300">
                                     {t.landing.startTest[language]}
                                 </Button>
                                 

@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { getAIResponseNonStreaming } from '../services/geminiService';
 import { MAX_SCORE } from '../constants';
@@ -48,8 +49,8 @@ const QuestionnaireResult: React.FC<QuestionnaireResultProps> = ({ score, onAnal
                 
                 <div className="mb-16">
                     <p className="text-xl text-slate-400 dark:text-slate-500 mb-6 font-medium">{t.questionnaireResult.riskIndex[language]}</p>
-                    <p className={`text-[8rem] font-black leading-none tracking-tighter ${scoreColor}`}>
-                        {score} <span className="text-4xl text-slate-300 dark:text-slate-600 font-light">/ {MAX_SCORE}</span>
+                    <p className={`text-7xl sm:text-8xl md:text-[8rem] font-black leading-none tracking-tighter ${scoreColor}`}>
+                        {score} <span className="text-3xl sm:text-4xl text-slate-300 dark:text-slate-600 font-light">/ {MAX_SCORE}</span>
                     </p>
                 </div>
 
@@ -61,11 +62,11 @@ const QuestionnaireResult: React.FC<QuestionnaireResultProps> = ({ score, onAnal
                         </div>
                     ) : (
                         <div className="w-full">
-                            <h2 className="text-2xl font-black mb-6 text-brand-teal-600 dark:text-brand-teal-400 flex items-center gap-3">
+                            <h2 className="text-xl sm:text-2xl font-black mb-6 text-brand-teal-600 dark:text-brand-teal-400 flex items-center gap-3">
                                 <span className="w-1.5 h-6 bg-brand-teal-500 rounded-full"></span>
                                 {t.questionnaireResult.aiSuggestion[language]}
                             </h2>
-                            <p className="text-xl text-slate-600 dark:text-slate-300 whitespace-pre-wrap leading-relaxed font-light">{analysis}</p>
+                            <p className="text-lg sm:text-xl text-slate-600 dark:text-slate-300 whitespace-pre-wrap leading-relaxed font-light">{analysis}</p>
                         </div>
                     )}
                 </div>
@@ -73,7 +74,7 @@ const QuestionnaireResult: React.FC<QuestionnaireResultProps> = ({ score, onAnal
                 <div className="mt-16 space-y-10">
                     <p className="text-xl text-slate-400 dark:text-slate-500 font-medium">{t.questionnaireResult.getComprehensive[language]}<br/>{t.questionnaireResult.proceedToMotorTest[language]}</p>
                     <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                        <Button onClick={onProceedToTestSelection} disabled={isLoading} className="px-16">
+                        <Button onClick={onProceedToTestSelection} disabled={isLoading} className="px-12 sm:px-16">
                            {t.questionnaireResult.nextStepButton[language]}
                         </Button>
                     </div>

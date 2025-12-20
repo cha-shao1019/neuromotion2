@@ -12,6 +12,18 @@ interface ChangelogPageProps {
 
 const changelogData = [
     {
+        version: "3.4.5",
+        date: "2025-12-22",
+        day: "Monday",
+        title: { 'zh-TW': '醫病互動與數據安全強化', 'en': 'Physician Interaction & Data Security Enhancement' },
+        items: [
+            { 'zh-TW': '【新功能】新增「醫病連線」功能，使用者可將匿名報告安全傳送給已註冊的醫師。', 'en': '【NEW】Added "Physician Connect" feature, allowing users to securely send anonymous reports to registered physicians.' },
+            { 'zh-TW': '【後台】為醫師角色新增專屬報告審核儀表板，可接收並確認病患報告。', 'en': '【ADMIN】Added a dedicated report review dashboard for physician roles to receive and confirm patient reports.' },
+            { 'zh-TW': '【數據庫】建立獨立的待審核報告數據流，強化臨床數據的隱私與安全性。', 'en': '【DATABASE】Created a separate data stream for pending reports to enhance clinical data privacy and security.' },
+            { 'zh-TW': '【優化】調整 AI 助手 (Admin) 的系統提示詞，使其能更好地理解與分析臨床數據集。', 'en': '【OPTIMIZATION】Adjusted the system prompt for the Admin AI assistant for better understanding and analysis of clinical datasets.' },
+        ]
+    },
+    {
         version: "3.4.1",
         date: "2025-12-20",
         day: "Saturday",

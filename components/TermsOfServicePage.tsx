@@ -80,7 +80,7 @@ const TermsOfServicePage: React.FC<TermsOfServicePageProps> = ({ onBack, languag
 
                     <div className="pt-20 border-t-2 border-slate-100 dark:border-slate-800 text-center">
                         <p className="text-[10px] text-slate-400 dark:text-slate-500 font-black uppercase tracking-[0.5em] mb-12 opacity-50">
-                            © 2025 NEUROMOTION CORE v3.4.1 FINAL
+                            © 2025 NEUROMOTION CORE v3.4.5 FINAL
                         </p>
                         <Button onClick={onBack} variant="secondary" className="px-24 py-6 shadow-lg shadow-slate-200/50 dark:shadow-black/20">
                             {t.infoPage.backToHome[language]}

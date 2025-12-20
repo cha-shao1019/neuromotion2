@@ -270,7 +270,7 @@ const FingerTapTest: React.FC<FingerTapTestProps> = ({ onComplete, language, t }
                 <Card className="w-full max-w-4xl text-center space-y-12 bg-slate-50 dark:bg-slate-800 rounded-[4rem]">
                     <div className="space-y-4">
                         <div className="inline-block px-4 py-1.5 bg-brand-teal-500/10 text-brand-teal-600 rounded-full text-[10px] font-black tracking-widest uppercase"> Step {currentTestIndex + 1} of 3 </div>
-                        <h1 className="text-5xl font-black text-slate-900 dark:text-white tracking-tighter"> {t.fingerTapTest[currentTest].title[language]} </h1>
+                        <h1 className="text-4xl sm:text-5xl font-black text-slate-900 dark:text-white tracking-tighter"> {t.fingerTapTest[currentTest].title[language]} </h1>
                     </div>
                     <div className="relative py-10 bg-white dark:bg-slate-900 rounded-[3rem] border border-slate-100 dark:border-slate-700 shadow-inner">
                         <RealisticHandGuide type={currentTest} />
@@ -283,7 +283,7 @@ const FingerTapTest: React.FC<FingerTapTestProps> = ({ onComplete, language, t }
                             </div>
                         ))}
                     </div>
-                    <Button onClick={() => setShowInstruction(false)} className="w-full py-8 text-2xl shadow-xl shadow-brand-teal-500/20"> 我已看完示範，開始檢測 </Button>
+                    <Button onClick={() => setShowInstruction(false)} className="w-full py-6 text-xl sm:py-8 sm:text-2xl shadow-xl shadow-brand-teal-500/20"> 我已看完示範，開始檢測 </Button>
                 </Card>
             </div>
         );
@@ -294,16 +294,16 @@ const FingerTapTest: React.FC<FingerTapTestProps> = ({ onComplete, language, t }
             <div className="relative w-full max-w-7xl aspect-video bg-black rounded-[4rem] overflow-hidden border-4 border-slate-800 shadow-2xl">
                 <video ref={videoRef} autoPlay playsInline muted className="absolute inset-0 w-full h-full scale-x-[-1] object-cover opacity-60" />
                 <canvas ref={canvasRef} width={1280} height={720} className="absolute inset-0 w-full h-full scale-x-[-1] pointer-events-none" />
-                <div className="absolute inset-0 p-12 flex flex-col justify-between pointer-events-none">
+                <div className="absolute inset-0 p-6 md:p-12 flex flex-col justify-between pointer-events-none">
                     <div className="flex justify-between items-start">
-                        <div className="bg-white/90 backdrop-blur-md px-10 py-6 rounded-[2.5rem] border border-slate-200">
+                        <div className="bg-white/90 backdrop-blur-md px-6 py-4 sm:px-10 sm:py-6 rounded-[2.5rem] border border-slate-200">
                             <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest block mb-2">檢測協議</span>
-                            <span className="text-3xl font-black text-slate-900">{t.fingerTapTest[currentTest].title[language]}</span>
+                            <span className="text-2xl sm:text-3xl font-black text-slate-900">{t.fingerTapTest[currentTest].title[language]}</span>
                         </div>
                         {isTesting && (
-                             <div className="bg-brand-teal-500 text-white px-16 py-8 rounded-[3rem] text-center shadow-2xl animate-reveal border-4 border-white/20">
+                             <div className="bg-brand-teal-500 text-white px-8 py-5 sm:px-16 sm:py-8 rounded-[3rem] text-center shadow-2xl animate-reveal border-4 border-white/20">
                                 <span className="text-[10px] font-black uppercase tracking-widest block mb-1">{currentTest === 'staticTremor' ? '剩餘秒數' : '完成進度'}</span>
-                                <span className="text-7xl font-mono font-black">{currentTest === 'staticTremor' ? `${countdown}s` : `${tapCount}/${REQUIRED_TAPS}`}</span>
+                                <span className="text-6xl sm:text-7xl font-mono font-black">{currentTest === 'staticTremor' ? `${countdown}s` : `${tapCount}/${REQUIRED_TAPS}`}</span>
                              </div>
                         )}
                     </div>
@@ -311,13 +311,13 @@ const FingerTapTest: React.FC<FingerTapTestProps> = ({ onComplete, language, t }
                         <div className="self-center bg-red-600/90 backdrop-blur-md text-white px-12 py-5 rounded-full font-black text-xl animate-bounce border-2 border-white/20 shadow-2xl"> ⚠️ 警告：環境不穩，請保持鏡頭固定 </div>
                     )}
                     {!isTesting && !isAnalyzing && (
-                        <div className="self-center w-full max-w-sm bg-white/10 backdrop-blur-2xl p-12 rounded-[3.5rem] border border-white/10 text-center pointer-events-auto">
-                            <h2 className="text-white text-3xl font-black mb-10 tracking-tighter">系統就緒</h2>
-                            <Button onClick={() => setIsTesting(true)} className="w-full py-6 text-xl">點擊開始計數</Button>
+                        <div className="self-center w-full max-w-sm bg-white/10 backdrop-blur-2xl p-8 sm:p-12 rounded-[3.5rem] border border-white/10 text-center pointer-events-auto">
+                            <h2 className="text-white text-2xl sm:text-3xl font-black mb-10 tracking-tighter">系統就緒</h2>
+                            <Button onClick={() => setIsTesting(true)} className="w-full py-5 text-lg sm:py-6 sm:text-xl">點擊開始計數</Button>
                         </div>
                     )}
                     {isAnalyzing && (
-                        <div className="self-center bg-white p-20 rounded-[4rem] text-center shadow-2xl">
+                        <div className="self-center bg-white p-12 sm:p-20 rounded-[4rem] text-center shadow-2xl">
                              <Loader text="計算運動衰減與節律變異中..." />
                              <DelayedAnalysisTip isAnalyzing={true} />
                         </div>

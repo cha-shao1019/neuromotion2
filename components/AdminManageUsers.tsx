@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect, useCallback } from 'react';
 import { AdminUser } from '../types';
 import Button from './shared/Button';
@@ -50,7 +51,7 @@ const AdminManageUsers: React.FC<AdminManageUsersProps> = ({ onBack, language, t
     };
 
     return (
-        <div className="min-h-screen bg-slate-50 mesh-gradient figma-grid flex flex-col items-center p-4 py-24 sm:py-32">
+        <div className="min-h-screen bg-slate-50 mesh-gradient figma-grid flex flex-col items-center p-4 py-16 sm:py-24">
             <Card className="w-full max-w-6xl animate-reveal bg-white shadow-2xl border-slate-100">
                 <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-6 mb-12">
                     <div>
@@ -65,28 +66,28 @@ const AdminManageUsers: React.FC<AdminManageUsersProps> = ({ onBack, language, t
                         <table className="w-full text-left">
                             <thead className="bg-slate-200/50 text-slate-500 uppercase text-xs font-black tracking-widest">
                                 <tr>
-                                    <th className="p-6">使用者名稱</th>
-                                    <th className="p-6">角色</th>
-                                    <th className="p-6">當前狀態</th>
-                                    <th className="p-6 hidden md:table-cell">證明 / Google 帳號</th>
-                                    <th className="p-6 text-right">管理操作</th>
+                                    <th className="p-4 md:p-6">使用者名稱</th>
+                                    <th className="p-4 md:p-6">角色</th>
+                                    <th className="p-4 md:p-6">當前狀態</th>
+                                    <th className="p-4 md:p-6 hidden md:table-cell">證明 / Google 帳號</th>
+                                    <th className="p-4 md:p-6 text-right">管理操作</th>
                                 </tr>
                             </thead>
                             <tbody className="text-slate-700 font-bold">
                                 {users.map(([username, user]) => (
                                     <tr key={username} className="border-b border-slate-100 hover:bg-white transition-colors">
-                                        <td className="p-6">
+                                        <td className="p-4 md:p-6">
                                             <div className="flex items-center gap-3">
                                                 <div className="w-10 h-10 rounded-full bg-slate-200 flex items-center justify-center text-slate-500 font-black uppercase">{username[0]}</div>
                                                 <span>{username}</span>
                                             </div>
                                         </td>
-                                        <td className="p-6">
+                                        <td className="p-4 md:p-6">
                                             <span className={`px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest ${roleColors[user.role]}`}>
                                                 {user.role}
                                             </span>
                                         </td>
-                                        <td className="p-6">
+                                        <td className="p-4 md:p-6">
                                             <div className="flex items-center gap-2">
                                                 <span className={`w-2 h-2 rounded-full ${user.status === 'approved' ? 'bg-green-500' : 'bg-yellow-500 animate-pulse'}`}></span>
                                                 <span className={`text-sm ${user.status === 'approved' ? 'text-green-600' : 'text-yellow-600'}`}>
@@ -94,11 +95,11 @@ const AdminManageUsers: React.FC<AdminManageUsersProps> = ({ onBack, language, t
                                                 </span>
                                             </div>
                                         </td>
-                                        <td className="p-6 text-xs text-slate-400 hidden md:table-cell max-w-xs">
+                                        <td className="p-4 md:p-6 text-xs text-slate-400 hidden md:table-cell max-w-xs">
                                             <p className="truncate font-mono">{user.proof || '無證明文件'}</p>
                                             <p className="text-brand-blue-500 truncate mt-1">{user.googleAccount || '未綁定 Google'}</p>
                                         </td>
-                                        <td className="p-6 text-right">
+                                        <td className="p-4 md:p-6 text-right">
                                             {user.role !== 'super-admin' ? (
                                                 <div className="flex gap-2 justify-end">
                                                     {user.status === 'pending' && (

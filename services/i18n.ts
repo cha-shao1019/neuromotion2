@@ -175,6 +175,11 @@ export const translations = {
         header: { 'zh-TW': 'AI 小幫手', 'en': 'AI Assistant' },
         placeholder: { 'zh-TW': '問問題...', 'en': 'Ask...' },
     },
+    adminAi: {
+        initialGreeting: { 'zh-TW': '您好，我是您的臨床數據 AI 助手。請提出您想分析的數據面向，例如：「請分析高風險個案的年齡分佈」。', 'en': 'Hello, I am your clinical data AI assistant. Please state the data aspect you want to analyze, e.g., "Analyze the age distribution of high-risk cases".' },
+        header: { 'zh-TW': '醫師洞見 AI', 'en': 'Doctor\'s Insight AI' },
+        placeholder: { 'zh-TW': '分析數據...', 'en': 'Analyze data...' },
+    },
     admin: {
         username: { 'zh-TW': '名稱', 'en': 'Name' },
         password: { 'zh-TW': '密碼', 'en': 'Pwd' },
@@ -195,7 +200,7 @@ export const translations = {
         introduction: { 'zh-TW': '歡迎使用 NeuroMotion Screen (以下簡稱“本服務”)。我們致力於保護您的隱私。本隱私權政策旨在說明我們如何收集、使用和保護您的資訊。', 'en': 'Welcome to NeuroMotion Screen (the "Service"). We are committed to protecting your privacy. This Privacy Policy explains how we collect, use, and safeguard your information.' },
         infoWeCollect: { 'zh-TW': '我們收集的資訊', 'en': 'Information We Collect' },
         infoWeCollectP1: { 'zh-TW': '為提供服務，我們僅收集最少的必要匿名資料：', 'en': 'To provide the Service, we collect only the minimum necessary anonymous data:' },
-        infoWeCollectP2: { 'zh-TW': '年齡範圍與性別：這些匿名的人口統計資料用於改善我們的AI模型分析，不會與任何個人身份連結。影像資料：您的相機影像僅在您的瀏覽器中即時處理，用於動作分析。這些影像資料絕不會上傳或儲存到我們的伺服器。', 'en': 'Age Range and Gender: This anonymous demographic data is used to improve our AI model analysis and is not linked to any personal identity. Video Data: Your camera feed is processed in real-time within your browser for motor analysis. This video data is never uploaded to or stored on our servers.' },
+        infoWeCollectP2: { 'zh-TW': '年齡範圍與性別：這些匿名的人口統計資料用於改善我們的AI模型分析，不會與任何個人身份連結。影像資料：您的相機影像僅在您的瀏覽器中即時處理，用於動作分析。這些影像資料絕不會上傳或儲存到我們的伺-服器。', 'en': 'Age Range and Gender: This anonymous demographic data is used to improve our AI model analysis and is not linked to any personal identity. Video Data: Your camera feed is processed in real-time within your browser for motor analysis. This video data is never uploaded to or stored on our servers.' },
         howWeUseInfoTitle: { 'zh-TW': '我們如何使用您的資訊', 'en': 'How We Use Your Information' },
         howWeUseInfoP1: { 'zh-TW': '我們使用收集到的匿名資料於以下目的：', 'en': 'We use the anonymous data collected for the following purposes:' },
         howWeUseInfoL1: { 'zh-TW': '提供與改善服務。', 'en': 'To provide and improve our Service.' },
