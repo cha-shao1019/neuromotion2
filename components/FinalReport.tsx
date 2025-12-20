@@ -12,6 +12,7 @@ import { CalendarIcon } from './icons/CalendarIcon';
 import PhysicianConnectModal from './PhysicianConnectModal';
 import { PaperAirplaneIcon } from './icons/PaperAirplaneIcon';
 import Toast from './shared/Toast';
+import RealTimeClock from './shared/RealTimeClock';
 
 interface FinalReportProps {
     results: ScreeningResults;
@@ -120,7 +121,10 @@ const FinalReport: React.FC<FinalReportProps> = ({ results, onStartOver, languag
                 <div className="flex flex-col md:flex-row justify-between items-center mb-16 gap-8 print-hide">
                     <div>
                         <h1 className="text-4xl sm:text-5xl font-black text-slate-900 dark:text-white tracking-tighter">篩檢結果總覽</h1>
-                        <p className="text-brand-teal-600 dark:text-brand-teal-400 font-black uppercase tracking-[0.4em] text-[10px] mt-2">v3.4.5 CLINICAL SYNC ACTIVE</p>
+                        <div className="flex items-center gap-4 mt-2">
+                             <p className="text-brand-teal-600 dark:text-brand-teal-400 font-black uppercase tracking-[0.4em] text-[10px]">v3.4.5 CLINICAL SYNC</p>
+                             <RealTimeClock className="text-[10px] tracking-widest" />
+                        </div>
                     </div>
                     <div className="flex flex-wrap gap-3 justify-start md:justify-end">
                         <Button onClick={onStartOver} variant="secondary" className="!px-6 !py-3 !text-xs sm:!text-sm">重新施測</Button>

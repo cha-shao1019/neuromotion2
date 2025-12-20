@@ -9,6 +9,7 @@ import { Language, translations } from '../services/i18n';
 import AdminAiAssistant from './AdminAiAssistant';
 import { UserGroupIcon } from './icons/UserGroupIcon';
 import { CheckCircleIcon } from './icons/CheckCircleIcon';
+import RealTimeClock from './shared/RealTimeClock';
 
 interface AdminDashboardProps {
     data: AdminData[];
@@ -93,13 +94,16 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ data, onExit, language,
                         <h1 className="text-4xl font-black text-slate-900 dark:text-white tracking-tighter">{t.admin.dashboardTitle[language]}</h1>
                         <p className="text-slate-400 dark:text-slate-500 font-medium italic">歡迎回來，{loggedInAdmin} ({adminUser?.role})</p>
                     </div>
-                    <div className="flex gap-3">
-                        {isSuperAdmin && (
-                            <Button onClick={() => onNavigate(Screen.ADMIN_MANAGE_USERS)} variant="secondary" className="!px-6 !py-3 text-xs flex items-center gap-2">
-                                <UserGroupIcon className="w-4 h-4" /> 帳號管理
-                            </Button>
-                        )}
-                        <Button onClick={onExit} variant="secondary" className="!px-6 !py-3 text-xs">退出後台</Button>
+                    <div className="flex flex-col items-end gap-3 self-stretch sm:self-auto">
+                        <RealTimeClock className="text-xs" />
+                        <div className="flex gap-3">
+                            {isSuperAdmin && (
+                                <Button onClick={() => onNavigate(Screen.ADMIN_MANAGE_USERS)} variant="secondary" className="!px-6 !py-3 text-xs flex items-center gap-2">
+                                    <UserGroupIcon className="w-4 h-4" /> 帳號管理
+                                </Button>
+                            )}
+                            <Button onClick={onExit} variant="secondary" className="!px-6 !py-3 text-xs">退出後台</Button>
+                        </div>
                     </div>
                 </header>
 
