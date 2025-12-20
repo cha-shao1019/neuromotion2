@@ -74,6 +74,40 @@
         background: radial-gradient(at 0% 0%, rgba(76, 170, 162, 0.15) 0px, transparent 50%),
                     radial-gradient(at 100% 0%, rgba(59, 130, 246, 0.1) 0px, transparent 50%);
       }
+
+      /* Animations */
+      @keyframes reveal { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+      .animate-reveal { animation: reveal 0.7s ease-out forwards; }
+      @keyframes slide-in-up { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+      .animate-slide-in-up { animation: slide-in-up 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards; }
+      @keyframes slide-in-from-right { from { transform: translateX(100%); } to { transform: translateX(0); } }
+      .animate-slide-in-from-right { animation: slide-in-from-right 0.4s cubic-bezier(0.25, 1, 0.5, 1) forwards; }
+      @keyframes slide-out-to-right { from { transform: translateX(0); } to { transform: translateX(100%); } }
+      .animate-slide-out-to-right { animation: slide-out-to-right 0.3s cubic-bezier(0.5, 0, 0.75, 0) forwards; }
+      @keyframes radiance-burst { 0% { transform: scale(0.5); opacity: 1; } 100% { transform: scale(1.5); opacity: 0; } }
+      .animate-radiance-burst { animation: radiance-burst 0.7s ease-out forwards; }
+      @keyframes fade-in { from { opacity: 0; } to { opacity: 1; } }
+      .animate-fade-in { animation: fade-in 0.3s ease-out forwards; }
+
+      /* Hamburger Menu CSS */
+      .hamburger-css {
+        padding: 10px; display: inline-block; cursor: pointer; transition-property: opacity, filter; transition-duration: 0.15s;
+        transition-timing-function: linear; font: inherit; color: inherit; text-transform: none; background-color: transparent;
+        border: 0; margin: 0; overflow: visible;
+      }
+      .hamburger-box { width: 24px; height: 18px; display: inline-block; position: relative; }
+      .hamburger-inner { display: block; top: 50%; margin-top: -1.25px; }
+      .hamburger-inner, .hamburger-inner::before, .hamburger-inner::after {
+        width: 24px; height: 2.5px; background-color: currentColor; border-radius: 4px; position: absolute;
+        transition-property: transform; transition-duration: 0.15s; transition-timing-function: ease;
+      }
+      .hamburger-inner::before, .hamburger-inner::after { content: ""; display: block; }
+      .hamburger-inner::before { top: -8px; }
+      .hamburger-inner::after { bottom: -8px; }
+      .hamburger-css.open .hamburger-inner { transform: rotate(45deg); transition-delay: 0.12s; transition-timing-function: cubic-bezier(0.215, 0.61, 0.355, 1); }
+      .hamburger-css.open .hamburger-inner::before { top: 0; opacity: 0; transition: top 0.1s ease-out, opacity 0.1s 0.12s ease-out; }
+      .hamburger-css.open .hamburger-inner::after { bottom: 0; transform: rotate(-90deg); transition: bottom 0.1s ease-out, transform 0.22s 0.12s cubic-bezier(0.215, 0.61, 0.355, 1); }
+
     </style>
   <script type="importmap">
 {
