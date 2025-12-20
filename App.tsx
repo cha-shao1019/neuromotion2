@@ -1,4 +1,5 @@
 
+
 import React, { useState, useCallback, useEffect } from 'react';
 import { Screen, ScreeningResults, AdminData } from './types';
 import LandingPage from './components/LandingPage';
@@ -29,7 +30,7 @@ import ChangelogPage from './components/ChangelogPage';
 import ClinicalReferencePage from './components/ClinicalReferencePage';
 import { LogoIcon } from './components/icons/LogoIcon';
 import { CssHamburger } from './components/shared/CssHamburger';
-import { getReports } from './services/reportService';
+// FIX: Removed import for `getReports` as it is obsolete and no longer exists in `reportService`.
 import AdminManageUsers from './components/AdminManageUsers';
 
 export type Theme = 'light' | 'dark';
@@ -67,7 +68,8 @@ const App: React.FC = () => {
             setIsChecking(false);
             audioService.init();
         });
-        setAdminData(getReports());
+        // FIX: Removed call to `getReports` as the function is obsolete and has been removed.
+        // Data fetching is now handled within components that require it.
     }, []);
 
     const navigate = useCallback((screen: Screen) => {

@@ -1,18 +1,20 @@
 
 import React, { useState, useEffect, useCallback } from 'react';
-import { AdminData, AdminUser, ChartDataPoint, Screen, PatientReportRequest } from '../types';
-import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
+import { AdminData, AdminUser, Screen, FirebaseReport } from '../types';
+import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer } from 'recharts';
 import Button from './shared/Button';
 import { getAdmins } from '../services/adminService';
-import { getPendingReportsForPhysician, acceptReport } from '../services/reportService';
+import { acceptReport } from '../services/reportService';
+import { onNewReports } from '../services/firebaseService';
 import { Language, translations } from '../services/i18n';
 import AdminAiAssistant from './AdminAiAssistant';
 import { UserGroupIcon } from './icons/UserGroupIcon';
 import { CheckCircleIcon } from './icons/CheckCircleIcon';
 import RealTimeClock from './shared/RealTimeClock';
+import Loader from './shared/Loader';
 
 interface AdminDashboardProps {
-    data: AdminData[];
+    data: AdminData[]; // This can be used for aggregate charts if needed
     onExit: () => void;
     language: Language;
     t: typeof translations;
@@ -22,39 +24,40 @@ interface AdminDashboardProps {
 
 const colors = ['#4caaa2', '#6cc0b8', '#fbbf24', '#ef4444'];
 
-// New component for Physician's view
+// New component for Physician's view with real-time updates
 const PhysicianView: React.FC<{ adminUsername: string }> = ({ adminUsername }) => {
-    const [pendingReports, setPendingReports] = useState<PatientReportRequest[]>([]);
+    const [pendingReports, setPendingReports] = useState<FirebaseReport[]>([]);
     const [isLoading, setIsLoading] = useState(true);
 
-    const fetchReports = useCallback(() => {
+    useEffect(() => {
         setIsLoading(true);
-        const reports = getPendingReportsForPhysician(adminUsername);
-        setPendingReports(reports);
-        setIsLoading(false);
+        // Set up the real-time listener
+        const unsubscribe = onNewReports(adminUsername, (reports) => {
+            setPendingReports(reports);
+            setIsLoading(false);
+        });
+
+        // Cleanup listener on component unmount
+        return () => unsubscribe();
     }, [adminUsername]);
 
-    useEffect(() => {
-        fetchReports();
-    }, [fetchReports]);
-
-    const handleAccept = (reportId: string) => {
-        acceptReport(reportId);
-        fetchReports(); // Refresh the list
+    const handleAccept = async (reportId: string) => {
+        await acceptReport(reportId);
+        // The real-time listener will automatically update the UI
     };
 
     return (
         <div className="bg-white dark:bg-slate-800 p-8 rounded-[3rem] border border-slate-200 dark:border-slate-700 shadow-sm col-span-1 md:col-span-3">
-            <h2 className="text-xl font-black mb-10 text-slate-900 dark:text-white border-l-4 border-brand-blue-500 pl-4">待處理的病患報告 ({pendingReports.length})</h2>
-            {isLoading ? <p>載入中...</p> : (
+            <h2 className="text-xl font-black mb-10 text-slate-900 dark:text-white border-l-4 border-brand-blue-500 pl-4">即時待審報告 ({pendingReports.length})</h2>
+            {isLoading ? <div className="py-10"><Loader text="同步雲端數據中..." /></div> : (
                 <div className="space-y-4">
                     {pendingReports.length > 0 ? pendingReports.map(report => (
-                        <div key={report.reportId} className="bg-slate-50 dark:bg-slate-900/50 p-6 rounded-2xl flex flex-col sm:flex-row justify-between sm:items-center gap-4">
+                        <div key={report.id} className="bg-slate-50 dark:bg-slate-900/50 p-6 rounded-2xl flex flex-col sm:flex-row justify-between sm:items-center gap-4 animate-reveal">
                             <div>
-                                <p className="font-mono text-xs text-slate-400 dark:text-slate-500">Patient ID: {report.patientUserId}</p>
-                                <p className="font-bold text-slate-700 dark:text-slate-200">提交於: {new Date(report.date).toLocaleString('zh-TW')}</p>
+                                <p className="font-mono text-xs text-slate-400 dark:text-slate-500">Report ID: ...{report.id.slice(-6)}</p>
+                                <p className="font-bold text-slate-700 dark:text-slate-200">提交於: {new Date(report.timestamp?.toDate()).toLocaleString('zh-TW')}</p>
                             </div>
-                            <Button onClick={() => handleAccept(report.reportId)} className="!px-5 !py-2 !text-xs !rounded-xl flex items-center gap-2">
+                            <Button onClick={() => handleAccept(report.id)} className="!px-5 !py-2 !text-xs !rounded-xl flex items-center gap-2">
                                <CheckCircleIcon className="w-4 h-4"/> 確認並歸檔
                             </Button>
                         </div>
@@ -125,7 +128,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ data, onExit, language,
                 </div>
 
                 {!isPhysician && (
-                    <div className="grid grid-cols-1 xl:grid-cols-2 gap-8">
+                     <div className="grid grid-cols-1 xl:grid-cols-2 gap-8">
                         <div className="bg-white dark:bg-slate-800 p-8 rounded-[3rem] border border-slate-200 dark:border-slate-700 shadow-sm">
                             <h2 className="text-xl font-black mb-10 text-slate-900 dark:text-white border-l-4 border-brand-teal-500 pl-4">風險級別分佈 (運動檢測)</h2>
                             <div className="h-80">
@@ -140,7 +143,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ data, onExit, language,
                             </div>
                         </div>
                         <div className="bg-white dark:bg-slate-800 p-8 rounded-[3rem] border border-slate-200 dark:border-slate-700 shadow-sm overflow-hidden">
-                            <h2 className="text-xl font-black mb-10 text-slate-900 dark:text-white border-l-4 border-brand-teal-500 pl-4">匿名受試者列表</h2>
+                             <h2 className="text-xl font-black mb-10 text-slate-900 dark:text-white border-l-4 border-brand-teal-500 pl-4">最近提交紀錄 (快取)</h2>
                             <div className="overflow-x-auto">
                                 <table className="w-full text-left">
                                     <thead className="text-[10px] text-slate-400 dark:text-slate-500 uppercase tracking-widest font-black border-b border-slate-100 dark:border-slate-700">

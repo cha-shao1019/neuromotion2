@@ -63,14 +63,22 @@ const FinalReport: React.FC<FinalReportProps> = ({ results, onStartOver, languag
 
     useEffect(() => {
         if (!results.finalAnalysis) {
-            const prompt = `請根據以下使用者數據，生成一份包含【數據觀察】、【風險評級】、【居家行動建議】三個章節的條列式臨床建議。
+            const prompt = `你現在是一個醫療數據轉換器。請將以下混亂的民眾問卷內容，轉換為給醫師看的專業臨床摘要。
+            
+            原始數據:
             - 年齡: ${results.age}, 性別: ${results.gender}
             - 問卷分數: ${results.questionnaireScore} / ${MAX_SCORE}
             - 簡易病史: ${results.medicalHistory || '未提供'}
-            - 手指開合數據: ${JSON.stringify(results.fingerTapResult?.fingerTapping)}
-            - 靜態震顫數據: ${JSON.stringify(results.fingerTapResult?.staticTremor)}
-            - 面部表情數據: ${JSON.stringify(results.maskedFaceResult)}
-            請在分析時特別留意病史與各項數據的關聯性。語言：${language === 'en' ? 'English' : '繁體中文'}。`;
+            - 手指開合數據 (Bradykinesia): ${JSON.stringify(results.fingerTapResult?.fingerTapping)}
+            - 靜止性震顫數據 (Resting Tremor): ${JSON.stringify(results.fingerTapResult?.staticTremor)}
+            - 面部表情數據 (Masked Face): ${JSON.stringify(results.maskedFaceResult)}
+
+            輸出格式要求：
+            - 必須包含 [主要症狀]、[風險評估(1-10分)]、[建議醫師優先確認事項] 三個段落標題。
+            - 請使用醫療專業術語（例如：將『手抖』改為『靜止性震顫』）。
+            - 不要包含任何開場白（例如：『好的，我幫您整理好了』），直接輸出內容。
+            - 語言：${language === 'en' ? 'English' : '繁體中文'}。`;
+
             getAIResponseNonStreaming(prompt).then(res => {
                 setFinalAnalysis(res);
                 setIsLoading(false);
@@ -78,22 +86,10 @@ const FinalReport: React.FC<FinalReportProps> = ({ results, onStartOver, languag
         }
     }, [results, language]);
 
-    const formattedTime = useMemo(() => {
-        return new Intl.DateTimeFormat('zh-TW', {
-            timeZone: 'Asia/Taipei',
-            year: 'numeric',
-            month: '2-digit',
-            day: '2-digit',
-            hour: '2-digit',
-            minute: '2-digit',
-            second: '2-digit',
-            hour12: false
-        }).format(new Date());
-    }, []);
-
     const structuredAnalysis = useMemo(() => {
         if (!finalAnalysis) return [];
-        const sections = finalAnalysis.split(/【|】/).filter(s => s.trim().length > 0);
+        // Use regex that handles both brackets for more robust splitting
+        const sections = finalAnalysis.split(/\[|\]/).filter(s => s.trim().length > 0);
         const result = [];
         for (let i = 0; i < sections.length; i += 2) {
             if (sections[i+1]) {
@@ -122,13 +118,13 @@ const FinalReport: React.FC<FinalReportProps> = ({ results, onStartOver, languag
                     <div>
                         <h1 className="text-4xl sm:text-5xl font-black text-slate-900 dark:text-white tracking-tighter">篩檢結果總覽</h1>
                         <div className="flex items-center gap-4 mt-2">
-                             <p className="text-brand-teal-600 dark:text-brand-teal-400 font-black uppercase tracking-[0.4em] text-[10px]">v3.4.5 CLINICAL SYNC</p>
+                             <p className="text-brand-teal-600 dark:text-brand-teal-400 font-black uppercase tracking-[0.4em] text-[10px]">v3.4.5 REAL-TIME SYNC</p>
                              <RealTimeClock className="text-[10px] tracking-widest" />
                         </div>
                     </div>
                     <div className="flex flex-wrap gap-3 justify-start md:justify-end">
                         <Button onClick={onStartOver} variant="secondary" className="!px-6 !py-3 !text-xs sm:!text-sm">重新施測</Button>
-                        <Button onClick={() => setShowConnectModal(true)} className="!px-5 !py-3 !text-xs sm:!text-sm flex items-center gap-2">
+                        <Button onClick={() => setShowConnectModal(true)} disabled={isLoading} className="!px-5 !py-3 !text-xs sm:!text-sm flex items-center gap-2">
                             <PaperAirplaneIcon className="w-4 h-4" />
                             傳送報告給醫師
                         </Button>
@@ -145,7 +141,7 @@ const FinalReport: React.FC<FinalReportProps> = ({ results, onStartOver, languag
                         <p className="text-xs font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-6">雲端同步狀態</p>
                         <div className="flex items-center gap-4 text-brand-teal-600 dark:text-brand-teal-400 font-black text-2xl">
                             <div className="w-4 h-4 bg-brand-teal-500 rounded-full animate-pulse"></div>
-                            遠端連線同步成功
+                            已連接至雲端資料庫
                         </div>
                     </div>
                 </div>
@@ -209,8 +205,9 @@ const FinalReport: React.FC<FinalReportProps> = ({ results, onStartOver, languag
             {showConnectModal && (
                 <PhysicianConnectModal 
                     results={results} 
+                    aiSummary={finalAnalysis || ''}
                     onClose={() => setShowConnectModal(false)} 
-                    onSuccess={() => setToastMessage("報告已成功傳送！")}
+                    onSuccess={(reportId) => setToastMessage(`報告 (ID: ...${reportId.slice(-6)}) 已成功傳送！`)}
                     language={language} 
                     t={t} />
             )}

@@ -1,9 +1,9 @@
-
 import { GoogleGenAI, Chat, GenerateContentResponse, Part, Type } from "@google/genai";
 import { ChatMessage, ScreeningResults, AdminData, MaskedFaceResult, MotorTestMetric, UPDRSScore } from "../types";
 import { QUESTIONS } from '../constants';
 
-// Initialize the GoogleGenAI client using the API key directly from process.env.API_KEY as per guidelines.
+// Initialize the GoogleGenAI client using the API key from Vite's environment variables.
+// FIX: Switched from import.meta.env.VITE_API_KEY to process.env.API_KEY to follow strict Gemini API guidelines.
 const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
 
 const modelName = 'gemini-3-flash-preview';

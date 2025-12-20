@@ -9,13 +9,14 @@ import { UserIcon } from './icons/UserIcon';
 
 interface PhysicianConnectModalProps {
     results: ScreeningResults;
+    aiSummary: string;
     onClose: () => void;
-    onSuccess: () => void;
+    onSuccess: (reportId: string) => void;
     language: Language;
     t: typeof translations;
 }
 
-const PhysicianConnectModal: React.FC<PhysicianConnectModalProps> = ({ results, onClose, onSuccess, language, t }) => {
+const PhysicianConnectModal: React.FC<PhysicianConnectModalProps> = ({ results, aiSummary, onClose, onSuccess, language, t }) => {
     const [physicians, setPhysicians] = useState<(Omit<AdminUser, 'password'> & { username: string })[]>([]);
     const [selectedPhysician, setSelectedPhysician] = useState('');
     const [isSubmitting, setIsSubmitting] = useState(false);
@@ -24,15 +25,17 @@ const PhysicianConnectModal: React.FC<PhysicianConnectModalProps> = ({ results, 
         setPhysicians(getApprovedPhysicians());
     }, []);
 
-    const handleSubmit = () => {
-        if (!selectedPhysician) return;
+    const handleSubmit = async () => {
+        if (!selectedPhysician || !aiSummary) return;
         setIsSubmitting(true);
-        submitReportToPhysician(selectedPhysician, results);
-        setTimeout(() => {
-            setIsSubmitting(false);
-            onSuccess();
+        const reportId = await submitReportToPhysician(selectedPhysician, results, aiSummary);
+        setIsSubmitting(false);
+        if (reportId) {
+            onSuccess(reportId);
             onClose();
-        }, 1000);
+        } else {
+            alert("報告傳送失敗，請稍後再試。");
+        }
     };
 
     return (
@@ -66,7 +69,7 @@ const PhysicianConnectModal: React.FC<PhysicianConnectModalProps> = ({ results, 
                         </div>
                          <div className="flex flex-col sm:flex-row gap-4">
                             <Button onClick={onClose} variant="secondary" className="w-full py-4 text-lg">取消</Button>
-                            <Button onClick={handleSubmit} disabled={!selectedPhysician || isSubmitting} className="w-full py-4 text-lg">
+                            <Button onClick={handleSubmit} disabled={!selectedPhysician || isSubmitting || !aiSummary} className="w-full py-4 text-lg">
                                 {isSubmitting ? '傳送中...' : '確認並傳送報告'}
                             </Button>
                         </div>

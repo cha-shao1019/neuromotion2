@@ -1,143 +1,50 @@
 
-import { ScreeningResults, AdminData, ChartDataPoint, PatientReportRequest } from '../types';
-
-const REPORTS_STORAGE_KEY = 'neuromotion_reports'; // For aggregate data
-const PENDING_REPORTS_STORAGE_KEY = 'neuromotion_pending_reports'; // For individual physician submissions
-
-// A simple function to determine risk level from results
-const determineMotorTestResult = (fingerTapResult: ScreeningResults['fingerTapResult'], maskedFaceResult: ScreeningResults['maskedFaceResult']): 'Normal' | 'Slight Risk' | 'Moderate Risk' | 'High Risk' => {
-    let riskPoints = 0;
-    if (fingerTapResult) {
-        if (fingerTapResult.fingerTapping?.speed === 'slow') riskPoints += 1;
-        if (fingerTapResult.fingerTapping?.consistency !== 'consistent') riskPoints += 1;
-        if (fingerTapResult.staticTremor?.tremorFrequency && fingerTapResult.staticTremor.tremorFrequency > 3) riskPoints += 2;
-    }
-    if (maskedFaceResult) {
-        if (maskedFaceResult.expressionMatch === 'poor') riskPoints += 2;
-        if (maskedFaceResult.reactionTime === 'slow') riskPoints += 1;
-    }
-
-    if (riskPoints >= 4) return 'High Risk';
-    if (riskPoints >= 2) return 'Moderate Risk';
-    if (riskPoints > 0) return 'Slight Risk';
-    return 'Normal';
-};
+import { ScreeningResults, FirebaseReport } from '../types';
+import { addReport, updateReportStatus } from './firebaseService';
 
 /**
- * Saves the report to the main aggregate pool.
- */
-export const saveReport = (results: ScreeningResults, realData?: { frequency: ChartDataPoint[], amplitude: ChartDataPoint[] }): void => {
-     if (!results.userId) {
-        console.error("Cannot save report without a userId.");
-        return;
-    }
-     const newReport: AdminData = {
-        userId: results.userId,
-        date: new Date().toISOString(),
-        questionnaireScore: results.questionnaireScore || 0,
-        motorTestResult: determineMotorTestResult(results.fingerTapResult, results.maskedFaceResult),
-        age: results.age || 'N/A',
-        gender: (results.gender as AdminData['gender']) || 'N/A',
-        realData: realData,
-    };
-     try {
-        const existingReports = getReports();
-        if (existingReports.some(report => report.userId === newReport.userId)) return;
-        const updatedReports = [...existingReports, newReport];
-        localStorage.setItem(REPORTS_STORAGE_KEY, JSON.stringify(updatedReports));
-    } catch (error) {
-        console.error("Failed to save aggregate report to localStorage", error);
-    }
-};
-
-
-/**
- * Submits a screening report to a specific physician for review.
+ * Submits a screening report to a specific physician for review via Firebase.
  * @param physicianUsername - The username of the target physician.
  * @param results - The full screening results object.
- * @param realData - Optional detailed chart data.
+ * @param aiSummary - The structured AI summary for the physician.
+ * @returns The ID of the newly created report in Firestore.
  */
-export const submitReportToPhysician = (physicianUsername: string, results: ScreeningResults, realData?: { frequency: ChartDataPoint[], amplitude: ChartDataPoint[] }): void => {
+export const submitReportToPhysician = async (physicianUsername: string, results: ScreeningResults, aiSummary: string): Promise<string | null> => {
     if (!results.userId) {
         console.error("Cannot submit report without a userId.");
-        return;
+        return null;
     }
 
-    const newRequest: PatientReportRequest = {
-        reportId: `rep_${Date.now()}`,
-        patientUserId: results.userId,
+    // The new report object aligns with the Firebase data model
+    const newReportPayload = {
+        userId: results.userId,
         physicianUsername,
-        status: 'pending',
-        date: new Date().toISOString(),
+        status: 'pending' as const,
         fullReportData: results,
-        realData,
+        aiSummary: aiSummary,
     };
     
     try {
-        const existingRequests = getPendingReports();
-        const updatedRequests = [...existingRequests, newRequest];
-        localStorage.setItem(PENDING_REPORTS_STORAGE_KEY, JSON.stringify(updatedRequests));
+        const reportId = await addReport(newReportPayload);
+        return reportId;
     } catch (error) {
-        console.error("Failed to submit report to physician", error);
+        console.error("Failed to submit report to Firestore", error);
+        return null;
     }
 };
 
 /**
- * Retrieves all pending reports from localStorage.
+ * Marks a report as 'reviewed' in Firestore.
+ * @param reportId - The Firestore document ID of the report to accept.
  */
-const getPendingReports = (): PatientReportRequest[] => {
+export const acceptReport = async (reportId: string): Promise<void> => {
     try {
-        const stored = localStorage.getItem(PENDING_REPORTS_STORAGE_KEY);
-        return stored ? JSON.parse(stored) : [];
+        await updateReportStatus(reportId, 'reviewed');
     } catch (error) {
-        console.error("Failed to parse pending reports", error);
-        return [];
+        console.error(`Failed to accept report ${reportId} in Firestore`, error);
     }
 };
 
-/**
- * Retrieves all pending reports for a specific physician.
- * @param physicianUsername - The username of the physician.
- * @returns An array of pending report requests.
- */
-export const getPendingReportsForPhysician = (physicianUsername: string): PatientReportRequest[] => {
-    const allPending = getPendingReports();
-    return allPending
-        .filter(req => req.physicianUsername === physicianUsername && req.status === 'pending')
-        .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
-};
-
-/**
- * Marks a report as accepted by the physician and adds it to the aggregate data pool.
- * @param reportId - The ID of the report to accept.
- */
-export const acceptReport = (reportId: string): void => {
-    const allPending = getPendingReports();
-    const reportIndex = allPending.findIndex(req => req.reportId === reportId);
-
-    if (reportIndex > -1) {
-        const acceptedReport = allPending[reportIndex];
-        acceptedReport.status = 'accepted';
-        
-        // Save to aggregate pool upon acceptance
-        saveReport(acceptedReport.fullReportData, acceptedReport.realData);
-
-        // Update the status in the pending list (or remove it)
-        allPending[reportIndex] = acceptedReport;
-        localStorage.setItem(PENDING_REPORTS_STORAGE_KEY, JSON.stringify(allPending));
-    }
-};
-
-/**
- * Retrieves all saved reports for the aggregate dashboard view.
- */
-export const getReports = (): AdminData[] => {
-    try {
-        const storedReports = localStorage.getItem(REPORTS_STORAGE_KEY);
-        const reports: AdminData[] = storedReports ? JSON.parse(storedReports) : [];
-        return reports.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
-    } catch (error) {
-        console.error("Failed to parse reports from localStorage", error);
-        return [];
-    }
-};
+// Note: getReports and other localStorage-based functions are now obsolete
+// and have been removed. Data fetching is handled directly in components
+// with real-time listeners from firebaseService.

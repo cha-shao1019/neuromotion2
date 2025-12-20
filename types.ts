@@ -94,18 +94,15 @@ export interface AdminData {
     };
 }
 
-export interface PatientReportRequest {
-    reportId: string;
-    patientUserId: string;
+// Replaces PatientReportRequest, aligns with Firebase data model
+export interface FirebaseReport {
+    id: string; // Firestore document ID
+    userId: string;
     physicianUsername: string;
-    status: 'pending' | 'accepted';
-    date: string; // ISO 8601 format
-    fullReportData: ScreeningResults; // Embed the full report
-    realData?: { 
-        frequency: ChartDataPoint[], 
-        amplitude: ChartDataPoint[],
-        waveformData?: ChartDataPoint[] 
-    };
+    status: 'pending' | 'reviewed';
+    timestamp: any; // Firestore ServerTimestamp
+    fullReportData: ScreeningResults;
+    aiSummary: string; // The structured summary for the doctor
 }
 
 
