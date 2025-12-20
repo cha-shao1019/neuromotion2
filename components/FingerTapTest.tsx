@@ -252,13 +252,13 @@ const FingerTapTest: React.FC<FingerTapTestProps> = ({ onComplete, language, t }
                 </svg>
                 <style dangerouslySetInnerHTML={{ __html: `
                     @keyframes tap-thumb { 0%, 100% { transform: rotate(0deg) translateX(0); } 50% { transform: rotate(15deg) translateX(10px); } }
-                    @keyframes tap-index { 0%, 100% { transform: rotate(0deg) translateY(0); } 50% { transform: rotate(-5deg) translateY(10px) translateX(5px); } }
+                    @keyframes tap-index { 0%, 100% { transform: rotate(0deg) translateY(0); } 50% { transform: rotate(-8deg) translateY(8px) translateX(8px); } }
                     .thumb-path { animation: tap-thumb 1.2s cubic-bezier(0.45, 0, 0.55, 1) infinite; transform-origin: 50px 85px; }
                     .index-finger-path { animation: tap-index 1.2s cubic-bezier(0.45, 0, 0.55, 1) infinite; transform-origin: 55px 40px; }
-                    @keyframes grip { 0%, 100% { transform: scaleY(1); } 50% { transform: scaleY(0.6) translateY(20px); } }
+                    @keyframes grip { 0%, 100% { transform: scaleY(1); } 50% { transform: scaleY(0.6); } }
                     .hand-open-close { animation: grip 1.5s cubic-bezier(0.45, 0, 0.55, 1) infinite; transform-origin: center 85px; }
-                    @keyframes tremor { 0%, 100% { transform: translate(0, 0); } 10% { transform: translate(0.5px, -0.5px); } 20% { transform: translate(-0.3px, 0.3px); } 30% { transform: translate(0.8px, 0.5px); } 40% { transform: translate(-0.5px, -0.8px); } 50% { transform: translate(0.2px, 0.4px); } 60% { transform: translate(-0.7px, 0.1px); } 70% { transform: translate(0.4px, -0.4px); } 80% { transform: translate(-0.2px, 0.6px); } 90% { transform: translate(0.6px, 0px); } }
-                    .static-tremor-hand { animation: tremor 0.5s linear infinite; }
+                    @keyframes tremor { 0%, 100% { transform: translate(0, 0); } 25% { transform: translate(0.6px, -0.2px); } 50% { transform: translate(0, 0.3px); } 75% { transform: translate(-0.6px, -0.2px); } }
+                    .static-tremor-hand { animation: tremor 0.4s linear infinite; }
                 `}} />
             </div>
         );

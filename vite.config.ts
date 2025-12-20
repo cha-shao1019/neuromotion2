@@ -13,6 +13,11 @@ export default defineConfig(({ mode }) => {
     build: {
       commonjsOptions: {
         transformMixedEsModules: true,
+      },
+      rollupOptions: {
+        external: [
+          'fft.js'
+        ]
       }
     },
     server: {
