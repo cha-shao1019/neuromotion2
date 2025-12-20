@@ -1,0 +1,7 @@
+{
+  "name": "Copy of Copy of Parkinson's Home Screening",
+  "description": "A web application for preliminary Parkinson's disease screening at home, using a questionnaire and a camera-based motor skills test, with AI-powered analysis and recommendations.",
+  "requestFramePermissions": [
+    "camera"
+  ]
+}

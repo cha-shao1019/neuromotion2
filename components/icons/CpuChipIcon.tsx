@@ -1,0 +1,7 @@
+import React from 'react';
+
+export const CpuChipIcon: React.FC<React.SVGProps<SVGSVGElement>> = (props) => (
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" {...props}>
+        <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 3v1.5M4.5 8.25H3m18 0h-1.5M4.5 12H3m18 0h-1.5m-15 3.75H3m18 0h-1.5M8.25 21v-1.5M15.75 3v1.5m0 16.5v-1.5m3.75-12H21m-18 0h1.5m15 3.75H21m-18 0h1.5m15 3.75H21m-18 0h1.5M15.75 21v-1.5m-7.5 0v-1.5m7.5-15V3m-7.5 0V3m0 18v-1.5m0-15V3m-3.75 0h1.5m9 0h1.5m-12 18h1.5m9 0h1.5m-6-15h.008v.008H12V3.75Zm-.75 3.75h.008v.008H11.25V7.5Zm-.75 3.75h.008v.008H10.5v-.008Zm-.75 3.75h.008v.008H9.75v-.008Zm-.75 3.75h.008v.008H9v-.008Zm-.75 3.75h.008v.008H8.25v-.008Zm.75-18h.008v.008H9V3.75Zm.75 3.75h.008v.008H9.75V7.5Zm.75 3.75h.008v.008H10.5v-.008Zm.75 3.75h.008v.008H11.25v-.008Zm.75 3.75h.008v.008H12v-.008Zm.75 3.75h.008v.008H12.75v-.008Zm.75-18h.008v.008H13.5V3.75Zm.75 3.75h.008v.008H14.25V7.5Zm.75 3.75h.008v.008H15v-.008Zm.75 3.75h.008v.008H15.75v-.008Zm-.75 3.75h.008v.008H15v-.008Zm-.75 3.75h.008v.008H14.25v-.008Zm-3-15h.008v.008H11.25V3.75Zm.75 3.75h.008v.008H12V7.5Zm.75 3.75h.008v.008H12.75v-.008Zm.75 3.75h.008v.008H13.5v-.008Zm.75 3.75h.008v.008H14.25v-.008Zm.75 3.75h.008v.008H15v-.008Z" />
+    </svg>
+);
