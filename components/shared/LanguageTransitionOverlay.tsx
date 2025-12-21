@@ -1,3 +1,4 @@
+
 import React, { useEffect, useRef, useState } from 'react';
 
 // Props remain the same
@@ -33,7 +34,8 @@ const REFORM_WORDS = ['NeuroMotion', 'Screening', '健康', 'Precision', '守護
 const LanguageTransitionOverlay: React.FC<LanguageTransitionOverlayProps> = ({ duration = 1800, onComplete }) => {
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const particlesRef = useRef<Particle[]>([]);
-    const animationFrameId = useRef<number>();
+    // FIX: Added initial value undefined to satisfy useRef argument requirement.
+    const animationFrameId = useRef<number | undefined>(undefined);
     const [opacity, setOpacity] = useState(1);
 
     // Helper to generate particle coordinates from text

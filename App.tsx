@@ -1,5 +1,4 @@
 
-
 import React, { useState, useCallback, useEffect } from 'react';
 import { Screen, ScreeningResults, AdminData } from './types';
 import LandingPage from './components/LandingPage';
@@ -11,8 +10,6 @@ import TestSelectionPage from './components/TestSelectionPage';
 import FingerTapTest from './components/FingerTapTest';
 import MaskedFaceTest from './components/MaskedFaceTest';
 import FinalReport from './components/FinalReport';
-import AdminLogin from './components/AdminLogin';
-import AdminRegister from './components/AdminRegister';
 import AdminDashboard from './components/AdminDashboard';
 import AiAssistant from './components/AiAssistant';
 import MobileMenu from './components/MobileMenu';
@@ -30,8 +27,6 @@ import ChangelogPage from './components/ChangelogPage';
 import ClinicalReferencePage from './components/ClinicalReferencePage';
 import { LogoIcon } from './components/icons/LogoIcon';
 import { CssHamburger } from './components/shared/CssHamburger';
-// FIX: Removed import for `getReports` as it is obsolete and no longer exists in `reportService`.
-import AdminManageUsers from './components/AdminManageUsers';
 
 export type Theme = 'light' | 'dark';
 export type MobileMenuAction = 'features' | 'changelog' | 'clinical_reference' | 'contact' | 'admin' | null;
@@ -41,12 +36,10 @@ const App: React.FC = () => {
     const [isTransitioning, setIsTransitioning] = useState(false);
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const [language, setLanguage] = useState<Language>('zh-TW');
-    const [theme, setTheme] = useState<Theme>('light'); // 預設為 light
+    const [theme, setTheme] = useState<Theme>('light');
     const [isMuted, setIsMuted] = useState(false);
     const [systemError, setSystemError] = useState<string | null>(null);
     const [isChecking, setIsChecking] = useState(true);
-    const [loggedInAdmin, setLoggedInAdmin] = useState<string | null>(null);
-    const [adminData, setAdminData] = useState<AdminData[]>([]);
 
     const [results, setResults] = useState<ScreeningResults>({
         userId: `user_${Math.random().toString(36).substr(2, 9)}`,
@@ -59,7 +52,7 @@ const App: React.FC = () => {
 
     useEffect(() => {
         document.documentElement.classList.toggle('dark', theme === 'dark');
-        document.body.style.backgroundColor = theme === 'dark' ? '#0B1120' : '#F8FAFC';
+        document.body.className = theme === 'dark' ? 'bg-[#0B1120] text-white' : 'bg-slate-50 text-slate-900';
     }, [theme]);
 
     useEffect(() => {
@@ -68,8 +61,6 @@ const App: React.FC = () => {
             setIsChecking(false);
             audioService.init();
         });
-        // FIX: Removed call to `getReports` as the function is obsolete and has been removed.
-        // Data fetching is now handled within components that require it.
     }, []);
 
     const navigate = useCallback((screen: Screen) => {
@@ -82,25 +73,20 @@ const App: React.FC = () => {
         }, 300);
     }, []);
 
-    const toggleMute = () => {
-        setIsMuted(!isMuted); 
-        audioService.setMuted(!isMuted);
-    };
-
     const renderContent = () => {
         const p = { language, t };
         switch (currentScreen) {
             case Screen.LANDING: return <LandingPage 
                 onStart={() => navigate(Screen.PRE_QUESTIONNAIRE_INFO)} 
                 onLogoClick={() => navigate(Screen.INFO_PAGE)} 
-                onAdminLoginClick={() => navigate(Screen.ADMIN_LOGIN)} 
+                onAdminLoginClick={() => navigate(Screen.ADMIN_DASHBOARD)} 
                 onMenuClick={() => setIsMobileMenuOpen(true)} 
                 onLanguageChange={setLanguage} 
                 onNavigate={navigate} 
                 theme={theme} 
                 toggleTheme={() => setTheme(prev => prev === 'light' ? 'dark' : 'light')} 
                 isMuted={isMuted}
-                onToggleMute={toggleMute}
+                onToggleMute={() => { setIsMuted(!isMuted); audioService.setMuted(!isMuted); }}
                 {...p} 
             />;
             case Screen.PRE_QUESTIONNAIRE_INFO: return <PreQuestionnaireInfo onSubmit={(age, gender, medicalHistory) => { setResults(r => ({...r, age, gender, medicalHistory})); navigate(Screen.QUESTIONNAIRE); }} {...p} />;
@@ -113,64 +99,55 @@ const App: React.FC = () => {
             case Screen.INFO_PAGE: return <InfoPage onBack={() => navigate(Screen.LANDING)} {...p} />;
             case Screen.CHANGELOG: return <ChangelogPage onBack={() => navigate(Screen.LANDING)} {...p} />;
             case Screen.CLINICAL_REFERENCE: return <ClinicalReferencePage onBack={() => navigate(Screen.LANDING)} {...p} />;
-            case Screen.ADMIN_LOGIN: return <AdminLogin onLoginSuccess={(username) => { setLoggedInAdmin(username); navigate(Screen.ADMIN_DASHBOARD); }} onExit={() => navigate(Screen.LANDING)} onGoToRegister={() => navigate(Screen.ADMIN_REGISTER)} {...p} />;
-            case Screen.ADMIN_REGISTER: return <AdminRegister onRegisterSuccess={() => navigate(Screen.ADMIN_DASHBOARD)} onGoToLogin={() => navigate(Screen.ADMIN_LOGIN)} {...p} />;
-            case Screen.ADMIN_DASHBOARD: return <AdminDashboard data={adminData} onExit={() => { setLoggedInAdmin(null); navigate(Screen.LANDING); }} loggedInAdmin={loggedInAdmin} onNavigate={navigate} {...p} />;
-            case Screen.ADMIN_MANAGE_USERS: return <AdminManageUsers onBack={() => navigate(Screen.ADMIN_DASHBOARD)} {...p} />;
+            case Screen.ADMIN_DASHBOARD: return <AdminDashboard data={[]} onExit={() => navigate(Screen.LANDING)} loggedInAdmin="Guest Doctor" onNavigate={navigate} {...p} />;
             case Screen.PRIVACY_POLICY: return <PrivacyPolicyPage onBack={() => navigate(Screen.LANDING)} {...p} />;
             case Screen.TERMS_OF_SERVICE: return <TermsOfServicePage onBack={() => navigate(Screen.LANDING)} {...p} />;
-            default: return <LandingPage onStart={() => {}} onLogoClick={() => {}} onAdminLoginClick={() => {}} onMenuClick={() => {}} onLanguageChange={() => {}} onNavigate={() => {}} theme={theme} toggleTheme={() => {}} isMuted={isMuted} onToggleMute={toggleMute} {...p} />;
+            default: return <LandingPage onStart={() => {}} onLogoClick={() => {}} onAdminLoginClick={() => {}} onMenuClick={() => {}} onLanguageChange={() => {}} onNavigate={() => {}} theme={theme} toggleTheme={() => {}} isMuted={isMuted} onToggleMute={() => {}} {...p} />;
         }
     };
 
-    if (isChecking) return (
-        <div className="min-h-screen flex items-center justify-center bg-slate-50 dark:bg-slate-900 transition-colors duration-1000">
-            <Loader text={t.app.initializing[language]} />
-        </div>
-    );
+    if (isChecking) return <div className="min-h-screen flex items-center justify-center dark:bg-[#0B1120]"><Loader text={t.app.initializing[language]} /></div>;
 
     return (
-        <div className={`min-h-screen ${theme === 'dark' ? 'dark bg-[#0B1120]' : 'bg-slate-50'}`}>
+        <div className={`min-h-screen transition-colors duration-500 ${theme === 'dark' ? 'dark' : ''}`}>
             {systemError && <SystemStatusModal error={systemError} onRestart={() => window.location.reload()} onContinue={() => setSystemError(null)} />}
             
             {currentScreen !== Screen.LANDING && (
-                <header className="fixed top-0 left-0 w-full px-6 py-4 z-[100] flex justify-between items-center bg-white/80 dark:bg-[#0B1120]/80 backdrop-blur-xl border-b border-slate-200 dark:border-white/10 transition-all shadow-sm">
-                    <div className="flex items-center gap-8">
-                        <div className="flex items-center gap-3 cursor-pointer group" onClick={() => navigate(Screen.INFO_PAGE)}>
-                            <div className="w-8 h-8 bg-brand-teal-500 rounded-lg flex items-center justify-center group-hover:rotate-12 transition-transform">
-                                <LogoIcon className="w-5 h-5 text-white" />
+                <header className="fixed top-0 left-0 w-full px-4 sm:px-8 py-4 z-[100] flex justify-between items-center bg-white/90 dark:bg-[#0B1120]/90 backdrop-blur-xl border-b border-slate-200 dark:border-white/10 transition-all">
+                    <div className="flex items-center gap-4 sm:gap-12">
+                        <div className="flex items-center gap-3 cursor-pointer group" onClick={() => navigate(Screen.LANDING)}>
+                            <div className="w-8 h-8 sm:w-10 sm:h-10 bg-brand-teal-500 rounded-xl flex items-center justify-center group-hover:rotate-6 transition-transform">
+                                <LogoIcon className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
                             </div>
-                            <span className="font-black tracking-tight text-xl text-slate-900 dark:text-white uppercase hidden sm:inline">NeuroMotion</span>
+                            <span className="font-black text-lg sm:text-2xl text-slate-900 dark:text-white uppercase hidden xs:inline">NeuroMotion</span>
                         </div>
                         
-                        <nav className="hidden md:flex items-center gap-6">
-                            <button onClick={() => navigate(Screen.INFO_PAGE)} className="text-sm font-bold text-slate-500 dark:text-slate-400 hover:text-brand-teal-500 dark:hover:text-brand-teal-400 transition-colors">{t.landing.howItWorks[language]}</button>
-                            <button onClick={() => navigate(Screen.CHANGELOG)} className="text-sm font-bold text-slate-500 dark:text-slate-400 hover:text-brand-teal-500 dark:hover:text-brand-teal-400 transition-colors">{t.app.changelog[language]}</button>
-                            <button onClick={() => navigate(Screen.CLINICAL_REFERENCE)} className="text-sm font-bold text-slate-500 dark:text-slate-400 hover:text-brand-teal-500 dark:hover:text-brand-teal-400 transition-colors">{t.app.clinicalReference[language]}</button>
+                        <nav className="hidden lg:flex items-center gap-8">
+                            <button onClick={() => navigate(Screen.INFO_PAGE)} className="text-sm font-bold text-slate-500 dark:text-slate-400 hover:text-brand-teal-500 transition-colors">{t.landing.howItWorks[language]}</button>
+                            <button onClick={() => navigate(Screen.CHANGELOG)} className="text-sm font-bold text-slate-500 dark:text-slate-400 hover:text-brand-teal-500 transition-colors">日誌</button>
+                            <button onClick={() => navigate(Screen.ADMIN_DASHBOARD)} className="text-sm font-bold text-brand-blue-500 dark:text-brand-blue-400 hover:opacity-80 transition-opacity">管理端入口</button>
                         </nav>
                     </div>
 
                     <div className="flex items-center gap-4">
-                        <div className="hidden md:flex items-center gap-2 px-3 py-1.5 bg-slate-100 dark:bg-slate-800 rounded-full border border-slate-200 dark:border-slate-700">
-                            <button onClick={toggleMute} className="p-1.5 text-slate-500 hover:text-slate-900 dark:hover:text-white transition-colors">
+                        <div className="hidden sm:flex items-center gap-3 px-3 py-1.5 bg-slate-100 dark:bg-slate-800 rounded-full border border-slate-200 dark:border-slate-700">
+                            <button onClick={() => { setIsMuted(!isMuted); audioService.setMuted(!isMuted); }} className="p-1.5 text-slate-500 hover:text-slate-900 dark:hover:text-white">
                                 <AnimatedSpeakerIcon isMuted={isMuted} className="w-4 h-4" />
                             </button>
                             <button onClick={() => setTheme(t => t === 'light' ? 'dark' : 'light')} className="p-1.5 text-slate-500 hover:scale-110 transition-transform">
                                 {theme === 'light' ? <MoonIcon className="w-4 h-4" /> : <SunIcon className="w-4 h-4 text-brand-teal-400" />}
                             </button>
                         </div>
-                        <div className="md:hidden">
-                            <CssHamburger isOpen={isMobileMenuOpen} onClick={() => setIsMobileMenuOpen(true)} className="text-slate-900 dark:text-white" />
-                        </div>
+                        <CssHamburger isOpen={isMobileMenuOpen} onClick={() => setIsMobileMenuOpen(true)} className="lg:hidden text-slate-900 dark:text-white" />
                     </div>
                 </header>
             )}
 
-            <main className={`${currentScreen !== Screen.LANDING ? 'pt-[80px]' : ''} transition-opacity duration-300 ${isTransitioning ? 'opacity-0' : 'opacity-100'}`}>
+            <main className={`${currentScreen !== Screen.LANDING ? 'pt-24 pb-20' : ''} transition-opacity duration-300 ${isTransitioning ? 'opacity-0' : 'opacity-100'}`}>
                 {renderContent()}
             </main>
 
-            {currentScreen !== Screen.LANDING && (
+            {currentScreen !== Screen.LANDING && currentScreen !== Screen.ADMIN_DASHBOARD && (
                 <div className="fixed bottom-6 right-6 z-[150]">
                     <AiAssistant language={language} t={t} results={results} />
                 </div>
@@ -182,17 +159,9 @@ const App: React.FC = () => {
                     onClose={(action: MobileMenuAction) => {
                         setIsMobileMenuOpen(false);
                         if (!action) return;
-                        if (action === 'features') {
-                            navigate(Screen.INFO_PAGE);
-                        } else if (action === 'changelog') {
-                            navigate(Screen.CHANGELOG);
-                        } else if (action === 'clinical_reference') {
-                            navigate(Screen.CLINICAL_REFERENCE);
-                        } else if (action === 'admin') {
-                            navigate(Screen.ADMIN_LOGIN);
-                        } else if (action === 'contact') {
-                            window.location.href = 'mailto:neuromotion.screening@gmail.com';
-                        }
+                        if (action === 'admin') navigate(Screen.ADMIN_DASHBOARD);
+                        else if (action === 'features') navigate(Screen.INFO_PAGE);
+                        else if (action === 'changelog') navigate(Screen.CHANGELOG);
                     }}
                     onLanguageChange={setLanguage}
                     theme={theme}
