@@ -27,6 +27,7 @@ import ChangelogPage from './components/ChangelogPage';
 import ClinicalReferencePage from './components/ClinicalReferencePage';
 import { LogoIcon } from './components/icons/LogoIcon';
 import { CssHamburger } from './components/shared/CssHamburger';
+import { UserIcon } from './components/icons/UserIcon';
 
 export type Theme = 'light' | 'dark';
 export type MobileMenuAction = 'features' | 'changelog' | 'clinical_reference' | 'contact' | 'admin' | null;
@@ -119,13 +120,19 @@ const App: React.FC = () => {
                             <div className="w-8 h-8 sm:w-10 sm:h-10 bg-brand-teal-500 rounded-xl flex items-center justify-center group-hover:rotate-6 transition-transform">
                                 <LogoIcon className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
                             </div>
-                            <span className="font-black text-lg sm:text-2xl text-slate-900 dark:text-white uppercase hidden xs:inline">NeuroMotion</span>
+                            <span className="font-black text-lg sm:text-2xl text-slate-900 dark:text-white uppercase hidden xs:inline tracking-tighter">NeuroMotion</span>
                         </div>
                         
                         <nav className="hidden lg:flex items-center gap-8">
-                            <button onClick={() => navigate(Screen.INFO_PAGE)} className="text-sm font-bold text-slate-500 dark:text-slate-400 hover:text-brand-teal-500 transition-colors">{t.landing.howItWorks[language]}</button>
-                            <button onClick={() => navigate(Screen.CHANGELOG)} className="text-sm font-bold text-slate-500 dark:text-slate-400 hover:text-brand-teal-500 transition-colors">日誌</button>
-                            <button onClick={() => navigate(Screen.ADMIN_DASHBOARD)} className="text-sm font-bold text-brand-blue-500 dark:text-brand-blue-400 hover:opacity-80 transition-opacity">管理端入口</button>
+                            <button onClick={() => navigate(Screen.INFO_PAGE)} className="text-sm font-bold text-slate-500 dark:text-slate-400 hover:text-brand-teal-500 transition-colors whitespace-nowrap">{t.landing.howItWorks[language]}</button>
+                            <button onClick={() => navigate(Screen.CHANGELOG)} className="text-sm font-bold text-slate-500 dark:text-slate-400 hover:text-brand-teal-500 transition-colors whitespace-nowrap">日誌</button>
+                            <button 
+                                onClick={() => navigate(Screen.ADMIN_DASHBOARD)} 
+                                className="flex items-center gap-2 px-4 py-2 rounded-xl bg-slate-900 dark:bg-white text-white dark:text-slate-900 font-bold text-xs whitespace-nowrap shadow-lg shadow-slate-900/10 dark:shadow-white/10 hover:scale-105 transition-all"
+                            >
+                                <UserIcon className="w-4 h-4" />
+                                管理端入口
+                            </button>
                         </nav>
                     </div>
 
