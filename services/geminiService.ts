@@ -3,7 +3,7 @@ import { GoogleGenAI, GenerateContentResponse, Part, Type } from "@google/genai"
 import { ChatMessage, ScreeningResults, MaskedFaceResult, MotorTestMetric, UPDRSScore } from "../types";
 
 // Always use process.env.API_KEY and initialize as a named parameter as per guidelines
-const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+const ai = new GoogleGenAI({ apiKey: import.meta.env.VITE_GEMINI_API_KEY });
 
 const modelName = 'gemini-3-flash-preview';
 
