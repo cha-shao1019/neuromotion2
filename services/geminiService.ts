@@ -2,9 +2,7 @@
 import { GoogleGenAI, GenerateContentResponse, Part, Type } from "@google/genai";
 import { ChatMessage, ScreeningResults, MaskedFaceResult, MotorTestMetric, UPDRSScore } from "../types";
 
-// Always use process.env.API_KEY and initialize as a named parameter as per guidelines
-const ai = new GoogleGenAI({ apiKey: import.meta.env.VITE_GEMINI_API_KEY });
-
+const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
 const modelName = 'gemini-3-flash-preview';
 
 const streamAIResponse = async (
@@ -26,7 +24,13 @@ const streamAIResponse = async (
     }
 };
 
-const assistantSystemInstruction = `你是「帕金森居家初步篩檢」的 AI 小幫手。你的回答必須簡潔、條列式、並用 **粗體** 標示重點。避免重複語句。最後務必加上醫療免責聲明。`;
+const assistantSystemInstruction = `你是「NeuroMotion」帕金森居家篩檢小幫手。
+你的回答規則：
+1. **絕不重複**：不要重複使用者的問題，直接回答。
+2. **簡約條列**：使用 * 代表項目，每點不超過 20 字。
+3. **重點標示**：關鍵詞必須用 **粗體**。
+4. **醫療聲明**：最後加上「本回答僅供參考，非正式醫療診斷」。
+5. **專業度**：使用臨床語氣，解釋篩檢過程與注意事項。`;
 
 const streamAIAssistantResponse = async (
     history: ChatMessage[],
@@ -54,10 +58,15 @@ const streamAIAssistantResponse = async (
     }
 };
 
-const adminAssistantSystemInstruction = `你是專業臨床數據與系統分析助手。你的任務是：
-1.  分析儀表板上的臨床數據集與趨勢。
-2.  解釋這個網站的篩檢項目（問卷、手指測試、面部測試）的運作原理與 MDS-UPDRS 評分標準。
-你的回答必須精準、條列式、並用 **粗體** 標示重點。`;
+const adminAssistantSystemInstruction = `你是 NeuroMotion 的臨床數據專家。
+你必須能夠回答關於以下主題的「系統問題」：
+* **網站運作原理**：Edge Computing, Mediapipe 視覺識別, 隱私影像不離機。
+* **科學依據**：MDS-UPDRS 量表, 4-6Hz 震顫頻率, Sequence Effect (振幅衰減)。
+* **對表單與檢測的解釋**：詳細說明問卷各題目的臨床意義。
+回答規則：
+1. **架構化**：使用條列式。
+2. **數據導向**：優先分析儀表板數據。
+3. **禁止廢話**：回答直接標重點。`;
 
 const streamAdminAIAssistantResponse = async (
     history: ChatMessage[],
@@ -67,7 +76,7 @@ const streamAdminAIAssistantResponse = async (
     onComplete: () => void,
     onError: (error: string) => void
 ): Promise<void> => {
-    const dataContext = `數據集摘要: ${JSON.stringify(adminData.slice(0, 5))}`;
+    const dataContext = `目前數據集摘要: ${JSON.stringify(adminData.slice(0, 3))}`;
     try {
         const chat = ai.chats.create({
             model: modelName,

@@ -62,7 +62,7 @@ const MobileMenu: React.FC<MobileMenuProps> = ({ isExiting, onClose, onLanguageC
                             <div className={iconWrapperClass}>
                                 <TableCellsIcon className="w-8 h-8" />
                             </div>
-                            <span className="font-bold text-xs tracking-wide">{t.app.clinicalReference[language]}</span>
+                            <span className="font-bold text-xs tracking-wide">臨床數據標準</span>
                         </button>
                          <button onClick={() => onClose('contact')} className={iconButtonClass}>
                             <div className={iconWrapperClass}>
@@ -71,15 +71,15 @@ const MobileMenu: React.FC<MobileMenuProps> = ({ isExiting, onClose, onLanguageC
                             <span className="font-bold text-xs tracking-wide">{t.landing.contactUs[language]}</span>
                         </button>
                          <button onClick={() => onClose('admin')} className={`${iconButtonClass} col-span-2`}>
-                            <div className={`${iconWrapperClass} w-full flex-row gap-3 h-14 bg-slate-900 hover:bg-slate-800 border-none`}>
-                                <UserIcon className="w-5 h-5 text-white" />
-                                <span className="font-bold text-sm tracking-wide text-white">{t.landing.adminPortal[language]}</span>
+                            <div className="w-full flex items-center justify-center gap-3 h-14 bg-slate-900 dark:bg-white text-white dark:text-slate-900 rounded-2xl shadow-xl active:scale-95 transition-all">
+                                <UserIcon className="w-5 h-5" />
+                                <span className="font-bold text-sm tracking-wide">{t.landing.adminPortal[language]}</span>
                             </div>
                         </button>
                 </div>
             </div>
 
-            {/* Bottom Controls (Language & Theme) - Quick Access */}
+            {/* Bottom Controls */}
             <div className="absolute bottom-0 w-full p-8 bg-slate-50 dark:bg-slate-800 border-t border-slate-100 dark:border-slate-700">
                 <div className="flex gap-4 max-w-sm mx-auto">
                     {/* Theme Toggle */}
@@ -95,13 +95,13 @@ const MobileMenu: React.FC<MobileMenuProps> = ({ isExiting, onClose, onLanguageC
                     <div className="flex-1 h-14 bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-700 flex p-1 shadow-sm">
                         <button 
                             onClick={() => onLanguageChange('zh-TW')}
-                            className={`flex-1 rounded-xl text-xs font-black transition-all ${language === 'zh-TW' ? 'bg-slate-900 text-white' : 'text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800'}`}
+                            className={`flex-1 rounded-xl text-xs font-black transition-all ${language === 'zh-TW' ? 'bg-slate-900 text-white' : 'text-slate-400'}`}
                         >
                             繁中
                         </button>
                         <button 
                             onClick={() => onLanguageChange('en')}
-                            className={`flex-1 rounded-xl text-xs font-black transition-all ${language === 'en' ? 'bg-slate-900 text-white' : 'text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800'}`}
+                            className={`flex-1 rounded-xl text-xs font-black transition-all ${language === 'en' ? 'bg-slate-900 text-white' : 'text-slate-400'}`}
                         >
                             EN
                         </button>

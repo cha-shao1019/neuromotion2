@@ -51,9 +51,12 @@ const App: React.FC = () => {
 
     const t = translations;
 
+    // 穩定化主題與背景色
     useEffect(() => {
-        document.documentElement.classList.toggle('dark', theme === 'dark');
-        document.body.className = theme === 'dark' ? 'bg-[#0B1120] text-white' : 'bg-slate-50 text-slate-900';
+        const isDark = theme === 'dark';
+        document.documentElement.classList.toggle('dark', isDark);
+        document.body.style.backgroundColor = isDark ? '#0B1120' : '#f8fafc';
+        document.body.className = isDark ? 'dark bg-[#0B1120] text-slate-100' : 'bg-slate-50 text-slate-900';
     }, [theme]);
 
     useEffect(() => {
@@ -79,7 +82,7 @@ const App: React.FC = () => {
         switch (currentScreen) {
             case Screen.LANDING: return <LandingPage 
                 onStart={() => navigate(Screen.PRE_QUESTIONNAIRE_INFO)} 
-                onLogoClick={() => navigate(Screen.INFO_PAGE)} 
+                onLogoClick={() => navigate(Screen.LANDING)} 
                 onAdminLoginClick={() => navigate(Screen.ADMIN_DASHBOARD)} 
                 onMenuClick={() => setIsMobileMenuOpen(true)} 
                 onLanguageChange={setLanguage} 
@@ -114,24 +117,26 @@ const App: React.FC = () => {
             {systemError && <SystemStatusModal error={systemError} onRestart={() => window.location.reload()} onContinue={() => setSystemError(null)} />}
             
             {currentScreen !== Screen.LANDING && (
-                <header className="fixed top-0 left-0 w-full px-4 sm:px-8 py-4 z-[100] flex justify-between items-center bg-white/90 dark:bg-[#0B1120]/90 backdrop-blur-xl border-b border-slate-200 dark:border-white/10 transition-all">
+                <header className="fixed top-0 left-0 w-full px-4 sm:px-8 py-4 z-[100] flex justify-between items-center bg-white/95 dark:bg-[#0B1120]/95 backdrop-blur-xl border-b border-slate-200 dark:border-white/10 transition-all">
                     <div className="flex items-center gap-4 sm:gap-12">
+                        {/* Logo 點擊一律返回首頁 */}
                         <div className="flex items-center gap-3 cursor-pointer group" onClick={() => navigate(Screen.LANDING)}>
-                            <div className="w-8 h-8 sm:w-10 sm:h-10 bg-brand-teal-500 rounded-xl flex items-center justify-center group-hover:rotate-6 transition-transform">
+                            <div className="w-8 h-8 sm:w-10 sm:h-10 bg-brand-teal-500 rounded-xl flex items-center justify-center group-hover:rotate-6 transition-transform shadow-lg">
                                 <LogoIcon className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
                             </div>
                             <span className="font-black text-lg sm:text-2xl text-slate-900 dark:text-white uppercase hidden xs:inline tracking-tighter">NeuroMotion</span>
                         </div>
                         
+                        {/* 電腦版選單 */}
                         <nav className="hidden lg:flex items-center gap-8">
-                            <button onClick={() => navigate(Screen.INFO_PAGE)} className="text-sm font-bold text-slate-500 dark:text-slate-400 hover:text-brand-teal-500 transition-colors whitespace-nowrap">{t.landing.howItWorks[language]}</button>
-                            <button onClick={() => navigate(Screen.CHANGELOG)} className="text-sm font-bold text-slate-500 dark:text-slate-400 hover:text-brand-teal-500 transition-colors whitespace-nowrap">日誌</button>
+                            <button onClick={() => navigate(Screen.INFO_PAGE)} className="text-sm font-bold text-slate-500 dark:text-slate-400 hover:text-brand-teal-500 transition-colors">運作原理</button>
+                            <button onClick={() => navigate(Screen.CHANGELOG)} className="text-sm font-bold text-slate-500 dark:text-slate-400 hover:text-brand-teal-500 transition-colors">日誌</button>
                             <button 
                                 onClick={() => navigate(Screen.ADMIN_DASHBOARD)} 
-                                className="flex items-center gap-2 px-4 py-2 rounded-xl bg-slate-900 dark:bg-white text-white dark:text-slate-900 font-bold text-xs whitespace-nowrap shadow-lg shadow-slate-900/10 dark:shadow-white/10 hover:scale-105 transition-all"
+                                className="flex items-center gap-2 px-4 py-2 rounded-xl bg-slate-900 dark:bg-white text-white dark:text-slate-900 font-bold text-xs shadow-xl hover:scale-105 transition-all"
                             >
                                 <UserIcon className="w-4 h-4" />
-                                管理端入口
+                                管理端
                             </button>
                         </nav>
                     </div>
@@ -145,7 +150,9 @@ const App: React.FC = () => {
                                 {theme === 'light' ? <MoonIcon className="w-4 h-4" /> : <SunIcon className="w-4 h-4 text-brand-teal-400" />}
                             </button>
                         </div>
-                        <CssHamburger isOpen={isMobileMenuOpen} onClick={() => setIsMobileMenuOpen(true)} className="lg:hidden text-slate-900 dark:text-white" />
+                        <div className="lg:hidden">
+                            <CssHamburger isOpen={isMobileMenuOpen} onClick={() => setIsMobileMenuOpen(true)} className="text-slate-900 dark:text-white" />
+                        </div>
                     </div>
                 </header>
             )}
