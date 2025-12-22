@@ -26,7 +26,7 @@ const streamAIResponse = async (
     }
 };
 
-const assistantSystemInstruction = `你是「帕金森居家初步篩檢」的 AI 小幫手。請引導使用者，並在結尾加上醫療免責聲明。`;
+const assistantSystemInstruction = `你是「帕金森居家初步篩檢」的 AI 小幫手。你的回答必須簡潔、條列式、並用 **粗體** 標示重點。避免重複語句。最後務必加上醫療免責聲明。`;
 
 const streamAIAssistantResponse = async (
     history: ChatMessage[],
@@ -54,6 +54,11 @@ const streamAIAssistantResponse = async (
     }
 };
 
+const adminAssistantSystemInstruction = `你是專業臨床數據與系統分析助手。你的任務是：
+1.  分析儀表板上的臨床數據集與趨勢。
+2.  解釋這個網站的篩檢項目（問卷、手指測試、面部測試）的運作原理與 MDS-UPDRS 評分標準。
+你的回答必須精準、條列式、並用 **粗體** 標示重點。`;
+
 const streamAdminAIAssistantResponse = async (
     history: ChatMessage[],
     newUserMessage: string,
@@ -66,7 +71,7 @@ const streamAdminAIAssistantResponse = async (
     try {
         const chat = ai.chats.create({
             model: modelName,
-            config: { systemInstruction: "你是專業臨床數據分析助手。" },
+            config: { systemInstruction: adminAssistantSystemInstruction },
             history: history.map((msg: ChatMessage) => ({ role: msg.role, parts: [{ text: msg.text }] })),
         });
         const stream = await chat.sendMessageStream({ message: `${dataContext}\n問題: ${newUserMessage}` });

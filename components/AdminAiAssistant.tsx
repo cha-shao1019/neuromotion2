@@ -1,3 +1,4 @@
+
 import React, { useState, useRef, useEffect } from 'react';
 import { ChatIcon } from './icons/ChatIcon';
 import { ChatMessage, AdminData } from '../types';
@@ -5,6 +6,7 @@ import { streamAdminAIAssistantResponse } from '../services/geminiService';
 import { LogoIcon } from './icons/LogoIcon';
 import { Language, translations } from '../services/i18n';
 import audioService from '../services/audioService';
+import { ChatMessageRenderer } from './shared/ChatMessageRenderer';
 
 interface AdminAiAssistantProps {
     language: Language;
@@ -94,7 +96,7 @@ const AdminAiAssistant: React.FC<AdminAiAssistantProps> = ({ language, t, adminD
             </button>
 
             <div
-                className={`absolute bottom-[80px] right-0 z-50 w-[calc(100vw-2rem)] max-w-md h-[70vh] bg-white border border-slate-200 rounded-[2.5rem] shadow-[0_30px_80px_rgba(15,23,42,0.2)] flex flex-col transition-all duration-500 ease-out overflow-hidden ${
+                className={`absolute bottom-[80px] right-0 z-50 w-[calc(100vw-2rem)] max-w-md h-[70vh] bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-[2.5rem] shadow-[0_30px_80px_rgba(15,23,42,0.2)] flex flex-col transition-all duration-500 ease-out overflow-hidden ${
                     isOpen ? 'opacity-100 translate-y-0 scale-100' : 'opacity-0 translate-y-10 scale-95 pointer-events-none'
                 }`}
             >
@@ -111,16 +113,16 @@ const AdminAiAssistant: React.FC<AdminAiAssistantProps> = ({ language, t, adminD
                     <button onClick={handleClose} className="text-slate-400 hover:text-white transition-colors p-2">&times;</button>
                 </header>
 
-                <div className="flex-1 p-6 overflow-y-auto bg-slate-50 figma-grid space-y-6">
+                <div className="flex-1 p-6 overflow-y-auto bg-slate-50 dark:bg-slate-800 figma-grid space-y-6">
                     {messages.map((msg, index) => (
                         <div key={index} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
-                            <div className={`max-w-[85%] px-5 py-4 rounded-3xl text-sm font-bold shadow-sm leading-relaxed ${
+                            <div className={`max-w-[85%] px-5 py-4 rounded-3xl text-sm font-medium shadow-sm leading-relaxed ${
                                 msg.role === 'user' 
                                 ? 'bg-brand-blue-600 text-white rounded-br-none' 
-                                : 'bg-white text-slate-800 rounded-bl-none border border-slate-200'
+                                : 'bg-white dark:bg-slate-700 text-slate-800 dark:text-slate-200 rounded-bl-none border border-slate-200 dark:border-slate-600'
                             }`}>
                                 {msg.text ? (
-                                    <p className="whitespace-pre-wrap">{msg.text}</p>
+                                    <ChatMessageRenderer text={msg.text} />
                                 ) : (
                                     <div className="flex items-center space-x-2 py-2">
                                        <div className="w-2 h-2 bg-brand-blue-500 rounded-full animate-bounce [animation-delay:-0.3s]"></div>
@@ -134,14 +136,14 @@ const AdminAiAssistant: React.FC<AdminAiAssistantProps> = ({ language, t, adminD
                     <div ref={messagesEndRef} />
                 </div>
 
-                <form onSubmit={handleSendMessage} className="p-4 bg-white border-t border-slate-200">
-                    <div className="flex items-center space-x-2 bg-slate-100 rounded-full border border-slate-200 p-1 pl-5">
+                <form onSubmit={handleSendMessage} className="p-4 bg-white dark:bg-slate-800 border-t border-slate-200 dark:border-slate-700">
+                    <div className="flex items-center space-x-2 bg-slate-100 dark:bg-slate-900/50 rounded-full border border-slate-200 dark:border-slate-700 p-1 pl-5">
                         <input
                             type="text"
                             value={inputValue}
                             onChange={(e) => setInputValue(e.target.value)}
                             placeholder={t.adminAi.placeholder[language]}
-                            className="flex-1 py-2 text-slate-900 bg-transparent focus:outline-none text-sm font-medium"
+                            className="flex-1 py-2 text-slate-900 dark:text-white bg-transparent focus:outline-none text-sm font-medium"
                         />
                         <button
                             type="submit"

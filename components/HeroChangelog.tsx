@@ -10,36 +10,33 @@ interface HeroChangelogProps {
 }
 
 const HeroChangelog: React.FC<HeroChangelogProps> = ({ language, scrollY }) => {
-    // 捲動淡出邏輯
-    const progress = Math.min(1, scrollY / 600); 
+    // 簡化捲動淡出邏輯，移除位移與縮放，讓體驗更平穩
+    const progress = Math.min(1, scrollY / 400); 
     const opacity = Math.max(0, 1 - progress); 
-    const scale = 1 + (progress * 0.05);
-    const translateY = scrollY * 0.5;
 
     if (opacity <= 0.01) return null;
 
     return (
         <div 
             className="fixed inset-0 flex flex-col items-center justify-center overflow-hidden z-[50] bg-slate-50 dark:bg-[#0B1120]"
-            style={{ opacity, pointerEvents: progress > 0.9 ? 'none' : 'auto' }}
+            style={{ opacity, pointerEvents: progress > 0.95 ? 'none' : 'auto' }}
         >
             {/* 背景層：Figma 風格網格 + 柔和醫療藍綠光暈 */}
             <div className="absolute inset-0 figma-grid opacity-60"></div>
             
             {/* 頂部光暈 - 模擬自然光 */}
-            <div className="absolute top-[-20%] left-[-10%] w-[80vw] h-[80vw] bg-[#4caaa2]/10 blur-[120px] rounded-full mix-blend-multiply"></div>
-            <div className="absolute bottom-[-20%] right-[-10%] w-[60vw] h-[60vw] bg-blue-400/10 blur-[100px] rounded-full mix-blend-multiply"></div>
+            <div className="absolute top-[-20%] left-[-10%] w-[80vw] h-[80vw] bg-[#4caaa2]/10 blur-[120px] rounded-full mix-blend-multiply dark:mix-blend-lighten"></div>
+            <div className="absolute bottom-[-20%] right-[-10%] w-[60vw] h-[60vw] bg-blue-400/10 blur-[100px] rounded-full mix-blend-multiply dark:mix-blend-lighten"></div>
             
             {/* 內容容器 */}
             <div 
                 className="relative z-10 flex flex-col items-center justify-center px-4 w-full max-w-7xl mx-auto"
-                style={{ transform: `translateY(-${translateY}px) scale(${scale})` }}
             >
                 {/* 頂部標籤 - 膠囊設計 (優化對比度) */}
-                <div className="flex items-center gap-3 mb-12 px-6 py-3 rounded-full bg-white dark:bg-slate-800/50 border border-slate-300 dark:border-slate-700 shadow-md backdrop-blur-md">
+                <div className="flex items-center gap-3 mb-12 px-6 py-3 rounded-full bg-white/50 dark:bg-slate-800/50 border border-slate-300/50 dark:border-slate-700/50 shadow-md backdrop-blur-md">
                     <LogoIcon className="w-5 h-5 text-[#4caaa2]" />
                     <span className="text-xs font-black text-slate-600 dark:text-slate-300 tracking-[0.2em] uppercase">
-                        {language === 'zh-TW' ? 'v3.4.5 · 臨床級居家篩檢' : 'v3.4.5 · Clinical Home Screening'}
+                        {language === 'zh-TW' ? 'v3.4.6 · 臨床級居家篩檢' : 'v3.4.6 · Clinical Home Screening'}
                     </span>
                 </div>
 
