@@ -1,14 +1,18 @@
 
 import React, { useState, useEffect } from 'react';
 import Button from './shared/Button';
+import Card from './shared/Card';
 import { LogoIcon } from './icons/LogoIcon';
 import { Language, translations } from '../services/i18n';
+import { AiCoreIcon } from './icons/AiCoreIcon';
 import { Screen } from '../types';
 import HeroChangelog from './HeroChangelog';
+import { ArrowDownIcon } from './icons/ArrowDownIcon';
 import { SunIcon } from './icons/SunIcon';
 import { MoonIcon } from './icons/MoonIcon';
 import { AnimatedSpeakerIcon } from './icons/AnimatedSpeakerIcon';
 import { UserIcon } from './icons/UserIcon';
+import { CssHamburger } from './shared/CssHamburger';
 
 interface LandingPageProps {
     onStart: () => void;
@@ -41,11 +45,17 @@ const LandingPage: React.FC<LandingPageProps> = ({ onStart, onLogoClick, onAdmin
             <nav className={`fixed top-0 w-full z-[100] transition-all duration-500 px-4 sm:px-8 py-4 flex justify-between items-center ${
                 scrollY > 50 ? 'bg-white/80 dark:bg-[#0B1120]/80 backdrop-blur-xl border-b border-slate-200 dark:border-white/10 shadow-sm' : 'bg-transparent'
             }`}>
-                <div className={`flex items-center gap-3 cursor-pointer transition-opacity ${scrollY > 100 ? 'opacity-100' : 'opacity-0'}`} onClick={onLogoClick}>
-                    <div className="w-8 h-8 bg-brand-teal-500 rounded-lg flex items-center justify-center shadow-lg">
-                        <LogoIcon className="w-5 h-5 text-white" />
+                <div className="flex items-center gap-4 sm:gap-12">
+                    <div className="flex items-center gap-3 cursor-pointer group" onClick={onLogoClick}>
+                        <div className="w-8 h-8 bg-brand-teal-500 rounded-lg flex items-center justify-center shadow-lg group-hover:rotate-6 transition-transform">
+                            <LogoIcon className="w-5 h-5 text-white" />
+                        </div>
+                        <span className="text-lg font-black dark:text-white uppercase tracking-tighter hidden xs:inline">NeuroMotion</span>
                     </div>
-                    <span className="text-lg font-black dark:text-white uppercase tracking-tighter">NeuroMotion</span>
+                     <nav className="hidden lg:flex items-center gap-8">
+                        <button onClick={() => onNavigate(Screen.INFO_PAGE)} className="text-sm font-bold text-slate-500 dark:text-slate-400 hover:text-brand-teal-500 transition-colors whitespace-nowrap">{t.landing.howItWorks[language]}</button>
+                        <button onClick={() => onNavigate(Screen.CHANGELOG)} className="text-sm font-bold text-slate-500 dark:text-slate-400 hover:text-brand-teal-500 transition-colors whitespace-nowrap">日誌</button>
+                    </nav>
                 </div>
 
                 <div className="flex items-center gap-4">
@@ -62,6 +72,9 @@ const LandingPage: React.FC<LandingPageProps> = ({ onStart, onLogoClick, onAdmin
                         <UserIcon className="w-4 h-4 text-white" />
                         <span className="text-sm font-bold tracking-tight">管理端入口</span>
                     </button>
+                    <div className="lg:hidden">
+                        <CssHamburger isOpen={false} onClick={onMenuClick} className="text-slate-900 dark:text-white" />
+                    </div>
 
                     {/* 手機版選單按鈕：移除了錯誤的 className 字串 */}
                     <button onClick={onMenuClick} className="lg:hidden p-2 text-slate-900 dark:text-white focus:outline-none">

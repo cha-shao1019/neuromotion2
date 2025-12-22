@@ -1,3 +1,4 @@
+
 import React, { useState, useRef, useEffect } from 'react';
 import { ChatIcon } from './icons/ChatIcon';
 import { ChatMessage, ScreeningResults } from '../types';
@@ -5,6 +6,7 @@ import { streamAIAssistantResponse } from '../services/geminiService';
 import { LogoIcon } from './icons/LogoIcon';
 import { Language, translations } from '../services/i18n';
 import audioService from '../services/audioService';
+import { ChatMessageRenderer } from './shared/ChatMessageRenderer';
 
 interface AiAssistantProps {
     language: Language;
@@ -116,7 +118,7 @@ const AiAssistant: React.FC<AiAssistantProps> = ({ language, t, results }) => {
                                 : 'bg-slate-100 dark:bg-slate-700 text-slate-800 dark:text-slate-100 rounded-bl-none border border-slate-200 dark:border-slate-600'
                             }`}>
                                 {msg.text ? (
-                                    <p className="whitespace-pre-wrap">{msg.text}</p>
+                                    <ChatMessageRenderer text={msg.text} />
                                 ) : (
                                     <div className="flex items-center space-x-2 py-2">
                                        <div className="w-2 h-2 bg-brand-teal-500 rounded-full animate-bounce [animation-delay:-0.3s]"></div>
