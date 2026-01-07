@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import Button from './shared/Button';
 import Card from './shared/Card';
@@ -9,8 +8,9 @@ import HeroChangelog from './HeroChangelog';
 import { SunIcon } from './icons/SunIcon';
 import { MoonIcon } from './icons/MoonIcon';
 import { AnimatedSpeakerIcon } from './icons/AnimatedSpeakerIcon';
-import { UserIcon } from './icons/UserIcon';
-import { CssHamburger } from './shared/CssHamburger';
+import { AiCoreIcon } from './icons/AiCoreIcon';
+// 假設你有一個 ClinicalIcon，若無可用 LogoIcon 代替
+import { ChartBarIcon } from '@heroicons/react/24/outline';
 
 interface LandingPageProps {
     onStart: () => void;
@@ -36,112 +36,119 @@ const LandingPage: React.FC<LandingPageProps> = ({ onStart, onLogoClick, onAdmin
         return () => window.removeEventListener('scroll', handleScroll);
     }, []);
 
-    const principles = [
-        { id: '01', icon: '📝', title: '臨床級問卷', desc: '對標 MDS-UPDRS 量表，初步評估主觀運動障礙。', color: 'bg-emerald-500' },
-        { id: '02', icon: '🖐️', title: '影像動態捕捉', desc: 'Mediapipe 邊緣運算技術，即時提取運動特徵點。', color: 'bg-blue-500' },
-        { id: '03', icon: '🧠', title: 'AI 臨床解析', desc: 'Gemini 模型深度分析震顫頻率與振幅衰減趨勢。', color: 'bg-purple-500' }
-    ];
-
     return (
-        <div className="relative bg-slate-50 dark:bg-[#0B1120] transition-colors duration-700 overflow-x-hidden">
+        <div className="relative bg-white dark:bg-[#0B1120] transition-colors duration-700 overflow-x-hidden font-sans">
             <HeroChangelog language={language} scrollY={scrollY} />
 
-            <nav className={`fixed top-0 w-full z-[100] transition-all duration-500 px-4 sm:px-8 py-4 flex justify-between items-center ${
-                scrollY > 50 ? 'bg-white/80 dark:bg-[#0B1120]/80 backdrop-blur-xl border-b border-slate-200 dark:border-white/10 shadow-sm' : 'bg-transparent'
+            {/* --- 專業導覽列 --- */}
+            <nav className={`fixed top-0 w-full z-[100] px-8 py-5 flex justify-between items-center transition-all duration-500 ${
+                scrollY > 50 ? 'bg-white/80 dark:bg-[#0B1120]/80 backdrop-blur-md shadow-sm' : 'bg-transparent'
             }`}>
-                <div className="flex items-center gap-4 sm:gap-12">
-                    <div className="flex items-center gap-3 cursor-pointer group" onClick={onLogoClick}>
-                        <div className="w-8 h-8 bg-brand-teal-500 rounded-lg flex items-center justify-center shadow-lg group-hover:rotate-6 transition-transform">
-                            <LogoIcon className="w-5 h-5 text-white" />
+                <div className="flex items-center gap-8">
+                    {/* 1. 左上角 Logo：引導進出介紹頁 */}
+                    <div
+                        className="flex items-center gap-3 cursor-pointer group active:scale-95 transition-all"
+                        onClick={() => onNavigate(Screen.INFO_PAGE)}
+                    >
+                        <div className="w-10 h-10 bg-brand-teal-500 rounded-xl flex items-center justify-center shadow-lg group-hover:rotate-12 transition-all">
+                            <LogoIcon className="w-6 h-6 text-white animate-pulse" />
                         </div>
-                        <span className="text-lg font-black dark:text-white uppercase tracking-tighter hidden xs:inline">NeuroMotion</span>
+                        <div className="flex flex-col">
+                            <span className="text-xl font-black dark:text-white uppercase tracking-tighter leading-none">NeuroMotion</span>
+                            <span className="text-[9px] font-bold text-brand-teal-500 tracking-widest uppercase opacity-80">
+                                {language === 'zh' ? '系統導覽' : 'System Info'}
+                            </span>
+                        </div>
                     </div>
-                    
-                    {/* 電腦版導覽文字按鈕 */}
-                    <nav className="hidden lg:flex items-center gap-8">
-                        <button onClick={() => onNavigate(Screen.INFO_PAGE)} className="text-sm font-bold text-slate-500 dark:text-slate-400 hover:text-brand-teal-500 transition-colors">{t.landing.howItWorks[language]}</button>
-                        <button onClick={() => onNavigate(Screen.CHANGELOG)} className="text-sm font-bold text-slate-500 dark:text-slate-400 hover:text-brand-teal-500 transition-colors">日誌</button>
-                        <button onClick={() => onNavigate(Screen.CLINICAL_REFERENCE)} className="text-sm font-bold text-slate-500 dark:text-slate-400 hover:text-brand-teal-500 transition-colors">標準</button>
-                    </nav>
+
+                    {/* 2. 臨床數據對照按鈕：修復語言切換與跳轉 */}
+                    <div
+                        className="hidden md:flex items-center gap-2 cursor-pointer group px-4 py-2 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 transition-all"
+                        onClick={() => onNavigate(Screen.CLINICAL_DATA)}
+                    >
+                        <div className="p-2 bg-slate-100 dark:bg-slate-700 rounded-lg group-hover:bg-brand-teal-500 transition-colors">
+                            <AiCoreIcon className="w-4 h-4 text-slate-500 group-hover:text-white" />
+                        </div>
+                        <span className="text-sm font-bold text-slate-600 dark:text-slate-300">
+                            {language === 'zh' ? '臨床數據對照' : 'Clinical Comparison'}
+                        </span>
+                    </div>
                 </div>
-                
+
                 <div className="flex items-center gap-4">
-                    <div className="hidden sm:flex items-center gap-2 p-1 bg-white/50 dark:bg-slate-800/50 rounded-full border border-slate-200 dark:border-slate-700">
+                    <div className="hidden sm:flex items-center gap-3 p-1.5 bg-slate-100 dark:bg-slate-800/50 rounded-full border border-slate-200 dark:border-white/5">
                         <button onClick={onToggleMute} className="w-8 h-8 flex items-center justify-center text-slate-500 hover:text-brand-teal-500"><AnimatedSpeakerIcon isMuted={isMuted} className="w-4 h-4" /></button>
                         <button onClick={toggleTheme} className="w-8 h-8 flex items-center justify-center text-slate-500 hover:text-brand-teal-500">{theme === 'light' ? <MoonIcon className="w-4 h-4" /> : <SunIcon className="w-4 h-4 text-brand-teal-500" />}</button>
+                        <button onClick={() => onLanguageChange(language === 'zh' ? 'en' : 'zh')} className="px-2 text-[10px] font-black hover:text-brand-teal-500 transition-colors">
+                            {language === 'zh' ? 'EN' : '中文'}
+                        </button>
                     </div>
-                    
-                    <button 
-                        onClick={onAdminLoginClick} 
-                        className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-slate-900 dark:bg-white text-white dark:text-slate-900 font-bold text-xs whitespace-nowrap min-w-max shadow-xl hover:scale-105 transition-all"
-                    >
-                        <UserIcon className="w-4 h-4" />
-                        管理端入口
-                    </button>
-                    
-                    <div className="lg:hidden">
-                        <CssHamburger isOpen={false} onClick={onMenuClick} className="text-slate-900 dark:text-white" />
-                    </div>
+                    <button onClick={onAdminLoginClick} className="px-6 py-2.5 rounded-xl bg-slate-900 dark:bg-white text-white dark:text-slate-900 font-bold text-xs shadow-xl hover:bg-brand-teal-600 transition-all">醫護端登入</button>
                 </div>
             </nav>
 
-            <div className="relative z-30" style={{ marginTop: '100vh' }}> 
-                <div className="bg-slate-50 dark:bg-slate-900 min-h-screen rounded-t-[4rem] border-t border-slate-100 dark:border-slate-800 py-32 px-4 space-y-40">
-                    
-                    {/* Hero Intro */}
-                    <div className="max-w-4xl mx-auto text-center space-y-12">
-                        <h2 className="text-6xl sm:text-8xl font-black dark:text-white tracking-tighter leading-none animate-reveal">
-                            居家檢測<br/><span className="text-brand-teal-500">不再遙不可及</span>
-                        </h2>
-                        <p className="text-xl text-slate-500 dark:text-slate-400 font-medium max-w-2xl mx-auto leading-relaxed">運用 AI 視覺分析技術，讓帕金森初步篩檢更快速、更私密。為長者設計，操作極簡化。</p>
-                        <div className="pt-8 flex flex-col sm:flex-row gap-6 justify-center">
-                            <Button onClick={onStart} className="px-16 py-8 text-2xl animate-pulse">立即開始測試</Button>
-                            <Button onClick={() => onNavigate(Screen.INFO_PAGE)} variant="secondary" className="px-12">詳細原理介紹</Button>
-                        </div>
-                    </div>
+            {/* --- 主內容區段 --- */}
+            <div className="relative z-30" style={{ marginTop: '100vh' }}>
+                <div className="bg-white dark:bg-slate-900 min-h-screen rounded-t-[5rem] border-t border-slate-100 dark:border-white/5 py-40 px-6">
+                    <div className="max-w-5xl mx-auto text-center">
 
-                    {/* 校正回歸：運作原理區段 */}
-                    <div className="max-w-7xl mx-auto">
-                        <div className="text-center mb-24">
-                            <h3 className="text-xs font-black text-brand-teal-500 uppercase tracking-[0.5em] mb-4">Core Principles</h3>
-                            <h4 className="text-4xl sm:text-5xl font-black dark:text-white tracking-tight">網站運作原理</h4>
+                        {/* A. NeuroMotion 大標題 */}
+                        <div className="space-y-8 mb-20">
+                            <h2 className="text-7xl sm:text-9xl font-black dark:text-white tracking-tighter leading-[0.85] animate-reveal">
+                                帕金森<br/><span className="text-brand-teal-500 font-black">數位精準篩檢</span>
+                            </h2>
+                            <p className="text-xl text-slate-400 dark:text-slate-500 font-medium max-w-2xl mx-auto leading-relaxed">
+                                {language === 'zh'
+                                    ? "結合 MDS-UPDRS 臨床量表標準與 Gemini 1.5 Flash 多模態分析。"
+                                    : "Combining MDS-UPDRS clinical standards with Gemini 1.5 Flash multi-modal analysis."}
+                            </p>
                         </div>
-                        
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
-                            {principles.map((p, i) => (
-                                <Card key={i} className="flex flex-col items-center text-center !p-12 hover:border-brand-teal-500/50 transition-all hover:translate-y-[-10px] duration-500 bg-white dark:bg-slate-800 shadow-2xl">
-                                    <div className={`w-20 h-20 ${p.color} text-white text-4xl flex items-center justify-center rounded-[2rem] shadow-2xl mb-10`}>
-                                        {p.icon}
+
+                        {/* B. 具有設計感與互動動畫的區塊 (原理裝飾區) */}
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-24 px-4">
+                            {[
+                                { title: language === 'zh' ? "智慧量表" : "Smart Scale", icon: "📋", desc: "Digital MDS-UPDRS" },
+                                { title: language === 'zh' ? "視覺辨識" : "Vision AI", icon: "📷", desc: "Edge AI Tracking" },
+                                { title: language === 'zh' ? "深度解析" : "Deep Analysis", icon: "🧠", desc: "Tremor Evaluation" }
+                            ].map((item, idx) => (
+                                <div key={idx} className="group relative p-12 rounded-[3.5rem] bg-slate-50 dark:bg-slate-800/40 border border-slate-100 dark:border-white/5 transition-all duration-500 hover:shadow-2xl hover:-translate-y-4 cursor-pointer overflow-hidden">
+                                    <div className="absolute top-0 right-0 -mr-6 -mt-6 w-32 h-32 bg-brand-teal-500/5 rounded-full group-hover:scale-[3.5] transition-transform duration-1000"></div>
+                                    <div className="text-6xl mb-8 transform group-hover:scale-125 group-hover:rotate-6 transition-transform duration-500 relative z-10">{item.icon}</div>
+                                    <h4 className="text-2xl font-black dark:text-white mb-4 relative z-10">{item.title}</h4>
+                                    <p className="text-[10px] font-black text-brand-teal-500 uppercase tracking-[0.3em] relative z-10 opacity-60">{item.desc}</p>
+                                    <div className="mt-8 w-12 h-1.5 bg-brand-teal-500/10 rounded-full overflow-hidden relative z-10 mx-auto">
+                                        <div className="w-full h-full bg-brand-teal-500 translate-x-[-100%] group-hover:translate-x-0 transition-transform duration-700 ease-out"></div>
                                     </div>
-                                    <h5 className="text-2xl font-black mb-6 dark:text-white">{p.title}</h5>
-                                    <p className="text-slate-500 dark:text-slate-400 font-medium leading-relaxed">{p.desc}</p>
-                                    <span className="mt-8 font-mono text-brand-teal-500 font-bold opacity-30">{p.id}</span>
-                                </Card>
+                                </div>
                             ))}
                         </div>
-                    </div>
 
-                    {/* Trust/Privacy Section */}
-                    <div className="max-w-5xl mx-auto bg-slate-900 dark:bg-brand-teal-500 rounded-[5rem] p-16 md:p-24 text-center text-white space-y-10 shadow-3xl relative overflow-hidden">
-                        <div className="absolute inset-0 figma-grid opacity-10"></div>
-                        <h4 className="text-5xl font-black tracking-tighter relative z-10">您的隱私，我們全力守護</h4>
-                        <p className="text-2xl opacity-80 max-w-3xl mx-auto font-medium leading-relaxed relative z-10">我們採用邊緣運算技術，所有的影像檢測均在您的裝置本地處理，絕不儲存或傳輸任何原始畫面。</p>
-                        <div className="flex justify-center gap-12 pt-8 relative z-10">
-                            <div className="text-center"><p className="text-3xl font-black">100%</p><p className="text-xs uppercase opacity-50 font-bold">本地處理</p></div>
-                            <div className="text-center"><p className="text-3xl font-black">0%</p><p className="text-xs uppercase opacity-50 font-bold">影像上傳</p></div>
+                        {/* C. 開始測驗按鍵區段 */}
+                        <div className="flex flex-col items-center gap-10 pb-40">
+                            <Button
+                                onClick={onStart}
+                                className="px-24 py-12 text-3xl font-black rounded-[3rem] shadow-3xl shadow-brand-teal-500/20 hover:scale-105 active:scale-95 transition-all"
+                            >
+                                {language === 'zh' ? '啟動臨床檢測程序' : 'Start Clinical Testing'}
+                            </Button>
+                            <div className="flex items-center gap-4 text-slate-300 dark:text-slate-700">
+                                <div className="w-12 h-[1px] bg-current"></div>
+                                <span className="text-[10px] font-black uppercase tracking-[0.5em]">NeuroMotion Clinical Edition v3.4.6</span>
+                                <div className="w-12 h-[1px] bg-current"></div>
+                            </div>
                         </div>
+
                     </div>
 
                     {/* Footer */}
-                    <footer className="pt-20 pb-16 text-center space-y-10 border-t border-slate-100 dark:border-slate-800">
-                        <div className="flex justify-center gap-10 text-sm font-black text-slate-400 dark:text-slate-500">
-                            <button onClick={() => onNavigate(Screen.PRIVACY_POLICY)} className="hover:text-brand-teal-500 transition-colors uppercase tracking-widest">Privacy</button>
-                            <button onClick={() => onNavigate(Screen.TERMS_OF_SERVICE)} className="hover:text-brand-teal-500 transition-colors uppercase tracking-widest">Terms</button>
-                            <button onClick={() => onNavigate(Screen.CHANGELOG)} className="hover:text-brand-teal-500 transition-colors uppercase tracking-widest">Changelog</button>
+                    <footer className="mt-40 pt-20 pb-16 text-center border-t border-slate-100 dark:border-slate-800">
+                        <div className="flex justify-center gap-10 text-[10px] font-black text-slate-400 uppercase tracking-widest mb-10">
+                            <button onClick={() => onNavigate(Screen.PRIVACY_POLICY)} className="hover:text-brand-teal-500 transition-colors">Privacy Policy</button>
+                            <button onClick={() => onNavigate(Screen.CHANGELOG)} className="hover:text-brand-teal-500 transition-colors">System Changelog</button>
                         </div>
-                        <div className="flex flex-col items-center gap-4">
-                            <div className="w-10 h-10 bg-slate-200 dark:bg-slate-800 rounded-xl flex items-center justify-center"><LogoIcon className="w-5 h-5 opacity-40" /></div>
-                            <p className="text-[10px] text-slate-300 dark:text-slate-600 font-black tracking-[0.4em] uppercase">© 2025 NEUROMOTION AI PROJECT. v3.4.6</p>
+                        <div className="flex flex-col items-center gap-4 opacity-30">
+                            <LogoIcon className="w-5 h-5 grayscale" />
+                            <p className="text-[9px] font-black tracking-[0.5em] uppercase">© 2025 NEUROMOTION AI PROJECT</p>
                         </div>
                     </footer>
                 </div>

@@ -1,4 +1,5 @@
 
+import SmartGuard from './components/SmartGuard';
 import React, { useState, useCallback, useEffect } from 'react';
 import { Screen, ScreeningResults, AdminData } from './types';
 import LandingPage from './components/LandingPage';
@@ -50,6 +51,22 @@ const App: React.FC = () => {
     });
 
     const t = translations;
+
+    useEffect(() => {
+        const handleAIRepair = (e: any) => {
+            console.log("React 接收到 AI 修復指令:", e.detail);
+
+            // 邏輯：如果用戶正在進行測試，則重置或優化當前測試
+            if (currentScreen === Screen.FINGER_TAP_TEST) {
+                // 這裡可以發送一個訊號給 FingerTapTest 組件
+                // 或是簡單地彈出提示告知用戶正在校準
+                console.log("正在校準指尖點按偵測...");
+            }
+        };
+
+        window.addEventListener('ai-repair-trigger', handleAIRepair);
+        return () => window.removeEventListener('ai-repair-trigger', handleAIRepair);
+    }, [currentScreen]);
 
     // 穩定化主題與背景色
     useEffect(() => {
@@ -113,7 +130,8 @@ const App: React.FC = () => {
     if (isChecking) return <div className="min-h-screen flex items-center justify-center dark:bg-[#0B1120]"><Loader text={t.app.initializing[language]} /></div>;
 
     return (
-        <div className={`min-h-screen transition-colors duration-500 ${theme === 'dark' ? 'dark' : ''}`}>
+        <SmartGuard>
+         <div className={`min-h-screen transition-colors duration-500 ${theme === 'dark' ? 'dark' : ''}`}>
             {systemError && <SystemStatusModal error={systemError} onRestart={() => window.location.reload()} onContinue={() => setSystemError(null)} />}
             
             {currentScreen !== Screen.LANDING && (
@@ -184,8 +202,10 @@ const App: React.FC = () => {
                     t={t}
                 />
             )}
-        </div>
+         </div>
+        </SmartGuard>
     );
 };
 
 export default App;
+

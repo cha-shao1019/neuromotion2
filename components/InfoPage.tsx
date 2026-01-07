@@ -12,9 +12,23 @@ interface InfoPageProps {
 
 const InfoPage: React.FC<InfoPageProps> = ({ onBack, language, t }) => {
     return (
-        <div className="min-h-screen bg-slate-50 dark:bg-slate-900 mesh-gradient figma-grid flex flex-col items-center p-4 py-32 md:py-40 transition-colors duration-500">
-            <Card className="w-full max-w-4xl animate-reveal bg-white dark:bg-slate-800 shadow-2xl border-slate-200 dark:border-slate-700">
-                <div className="flex flex-col items-center text-center mb-16">
+        /* 1. 確保背景是純色不透明 bg-white，層級 z-[200] 蓋過所有東西 */
+        <div className="fixed inset-0 min-h-screen bg-white dark:bg-slate-900 z-[200] overflow-y-auto flex flex-col items-center p-4 py-32 md:py-40 transition-colors duration-500">
+
+            {/* 2. 修正後的返回 Logo 容器 */}
+            <div
+                className="fixed top-8 left-8 z-[210] flex items-center gap-3 cursor-pointer group active:scale-90 transition-all"
+                onClick={onBack}
+            >
+                <div className="w-10 h-10 bg-brand-teal-500 rounded-xl flex items-center justify-center shadow-lg group-hover:rotate-12 transition-all duration-300">
+                    <LogoIcon className="w-6 h-6 text-white animate-pulse" />
+                </div>
+                <div className="hidden sm:flex flex-col">
+                    <span className="text-sm font-black dark:text-slate-900 dark:text-white uppercase tracking-tighter leading-none">NeuroMotion</span>
+                    <span className="text-[9px] font-bold text-brand-teal-500 tracking-widest uppercase opacity-80">Back to Portal</span>
+                </div>
+            </div>
+            <Card className="w-full max-w-4xl animate-reveal bg-white dark:bg-slate-800 shadow-2xl border-slate-200 dark:border-slate-700 relative z-[205]">                <div className="flex flex-col items-center text-center mb-16">
                     <LogoIcon className="w-24 h-24 mb-6" />
                     <h1 className="text-5xl font-black tracking-tighter">
                         <span className="text-slate-900 dark:text-white">NeuroMotion</span>

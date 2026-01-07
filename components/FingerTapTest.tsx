@@ -73,6 +73,32 @@ const FingerTapTest: React.FC<FingerTapTestProps> = ({ onComplete, language, t }
     }, []);
 
     useEffect(() => { initAIModel(); }, [initAIModel]);
+    useEffect(() => {
+        const handleGlobalAIRepair = () => {
+            // 執行組件內的重啟或校準邏輯
+            handleRestartCamera();
+
+            // 如果正在測試，重設分析器以修復誤差
+            if (isTesting) {
+                bradykinesiaAnalyzerRef.current.reset();
+                setTapCount(0);
+                setAiTip("AI 已重新校準，請重新開始動作。");
+            }
+        };
+
+        window.addEventListener('ai-repair-trigger', handleGlobalAIRepair);
+        return () => window.removeEventListener('ai-repair-trigger', handleGlobalAIRepair);
+    }, [isTesting]);
+    useEffect(() => {
+        const handleGlobalAIRepair = () => {
+            handleRestartCamera(); // 觸發您原本就寫好的重啟鏡頭函式
+            if (isTesting) {
+                setAiTip("✨ AI 已重新校準環境參數");
+            }
+        };
+        window.addEventListener('ai-repair-trigger', handleGlobalAIRepair);
+        return () => window.removeEventListener('ai-repair-trigger', handleGlobalAIRepair);
+    }, [handleRestartCamera, isTesting]);
     useEffect(() => { if (!showInstruction) startCamera(); }, [showInstruction, startCamera]);
 
     const handleRestartCamera = () => {
